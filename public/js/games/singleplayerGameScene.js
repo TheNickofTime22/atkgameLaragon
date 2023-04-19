@@ -24,7 +24,7 @@ let isRunning = true;
 // Block names and indices
 let primaryBlock;
 let primaryBlockName;
-let primaryBlockIndex = [0, 3];
+let primaryBlockIndex = [];
 let secondaryBlock;
 let secondaryBlockName;
 let secondaryBlockIndex = [primaryBlockIndex[0], primaryBlockIndex[1] + 1];
@@ -35,7 +35,7 @@ let blockColors = ["gold_block", "red_block", "blue_block", "green_block", "oran
 let rngSeedInt;
 
 // Game rules
-let numRows = 6;
+let numRows = 3;
 let left, right, up, down, swap, bugR, bugE, remove, speedUpBtn;
 
 // Check match
@@ -82,7 +82,7 @@ class SingleplayerGameScene extends Phaser.Scene {
         nameIncrement = 0;
         primaryBlockIndex = [0, 180];
         secondaryBlockIndex = [primaryBlockIndex[0], primaryBlockIndex[1] + 60];
-        numRows = 14;
+        numRows = 14; // HOW MANY ROWS SPAWN
         main_container_blockLevel = 3;
         block_containerChildren = [];
 
@@ -170,14 +170,14 @@ class SingleplayerGameScene extends Phaser.Scene {
         this.add.text(710, -20, '_______________', { font: '92px Bernard', fill: '#000000' });
 
         block_container.each(sprite => {
-            if (sprite.y < 780) {
+            if (sprite.getBounds().y < 780) {
                 blue_visible_blocks.add(sprite);
                 sprite.setAlpha(1);
             }
         });
 
         block_container.on('childMoved', (child) => {
-            if (child.y < 780) {
+            if (child.getBounds().y < 780) {
                 console.log("blue Listened...")
                 blue_visible_blocks.add(child);
                 child.setAlpha(1);
@@ -368,15 +368,15 @@ class SingleplayerGameScene extends Phaser.Scene {
             if (primaryBlock == null || secondaryBlock == null) {
 
             } else {
-                // primaryBlock.setTexture('null_block');
-                // primaryBlock.setData('color', 'null_block');
+                primaryBlock.setTexture('null_block');
+                primaryBlock.setData('color', 'null_block');
 
-                // secondaryBlock.setTexture('null_block');
-                // secondaryBlock.setData('color', 'null_block');
-                primaryBlock.destroy();
+                secondaryBlock.setTexture('null_block');
+                secondaryBlock.setData('color', 'null_block');
+
             }
 
-
+            this.bubbleUpNull();
 
 
         }
@@ -387,7 +387,9 @@ class SingleplayerGameScene extends Phaser.Scene {
         }
 
         if (Phaser.Input.Keyboard.JustDown(bugE)) {
-            console.log(primaryBlock.getData('color'), primaryBlock.getData('matched'));
+            console.log(primaryBlock.getData('color'), primaryBlock.x, primaryBlock.y);
+
+            console.log(blue_visible_blocks.children);
         }
 
 
@@ -409,7 +411,7 @@ class SingleplayerGameScene extends Phaser.Scene {
         main_container.y = (0 - block_containerRiseSpeed);
 
 
-        if (block_container.getBounds().y <= 68) {
+        if (main_container.getBounds().y <= 68) {
             this.game_score_display = game_score_display
             console.log("Pre Send- " + this.game_mode_display);
             this.scene.start('gameoverScene', { user: this.user, game_score_display: game_score_display, game_mode_display: game_mode_display });
@@ -444,7 +446,7 @@ class SingleplayerGameScene extends Phaser.Scene {
             //this.matchof4Hori();
             //this.matchOf3Hori();
             this.activateBlocks();
-            this.bubbleUpNull();
+
             this.eliminateRow();
             score_display.setText(game_score_display);
         }
@@ -471,32 +473,72 @@ class SingleplayerGameScene extends Phaser.Scene {
     }
 
     bubbleUpNull() {
+        let nullArray = [];
 
-        // blue_visible_blocks.getChildren().forEach(function(block){
 
-        //     let first_x = block.x;
-        //     let first_y = block.y;
+        // an array with keys 0-420 to represent each column
+        let columnArray = {};
 
-        //     console.log(first_x, first_y)
+        // Initialize columnArray with keys for each column
+        for (let i = 0; i <= 420; i += 60) {
+            columnArray[i.toString()] = [];
+        }
 
-        // });
-        // for (let row = 0; row < numRows - 1; row++) {
-        //     for (let column = 0; column < 8; column++) {
+        // Iterate over blue_visible_blocks to find null blocks
+        blue_visible_blocks.getChildren().forEach(function (block) {
+            if (block.texture.key === 'null_block') {
+                nullArray.push(block);
+            }
+        });
 
-        //         let top = (8 * row) + column
-        //         let bot = (8 * (row + 1)) + column
+        // add nulls to the column their in
+        nullArray.forEach(function (nullblock) {
+            if (nullblock.x in columnArray) {
+                columnArray[nullblock.x.toString()].push(nullblock);
+            }
+        });
+        // columnArray is now a dictionary with the keys = to the string of the x coordinate related to the column is equal to the array of nullblocks in that column
 
-        //         let block1 = block_container.getAt(top);
-        //         let block2 = block_container.getAt(bot);
+        // note: if a column has a null in row 0, ignore it. If it has one in row 0, and 60, ignore 60
 
-        //         if (block2.getData('color') == 'null_block' && block1.getData('color') != 'null_block') {
 
-        //             this.swapColors(block1, block2);
-        //             //this.setAlphaOnBlock(block1, block2)
-        //         }
-        //     }
-        // }
+        columnArray.forEach(function(columnOfNulls){
+            // go through the first column, find the highest null
+            columnOfNulls[0].sort((a, b) => a.y + b.y);
+            columnOfNulls.forEach(block => {
+                // get the "highest" row y value null block, swap it with the one above it, do it until
+                this.riseANull(block_container.getAt(block.x, block.y - 60), block_container.getAt(block.x, block.y))
+
+            });
+
+
+        });
+
     }
+
+    riseANull(coloredBlock, nullBlock){
+        const color1 = coloredBlock.texture.key;
+        const color2 = nullBlock.texture.key;
+
+
+        if (color1 !== color2) {
+            block1.setTexture(color2);
+            block2.setTexture(color1);
+
+            block1.setData('color', color2);
+            block2.setData('color', color1);
+        }
+    }
+
+    givenNulls_returnNewColumn(array){
+        let highestColoredLevel = 0;
+        if(array[0] === 0){
+            highestColoredLevel = 60;
+        } else if(array[0] === 60){
+            highestColoredLevel += 60;
+        }
+    }
+
 
     matchOf3Vert() {
         for (let row = 0; row < numRows - 2; row++) {
@@ -634,8 +676,7 @@ class SingleplayerGameScene extends Phaser.Scene {
     }
 
     bombExplosion(bomb_block, isLeft) {
-        const x = bomb_block.getData('x');
-        const y = bomb_block.getData('y');
+
         const blocks = [];
 
         // Add blocks 2 directions up
@@ -689,7 +730,13 @@ class SingleplayerGameScene extends Phaser.Scene {
 
             block_container.removeBetween(0, 8, true);
             this.addRow();
-            //main_container.y -= 60;
+
+            block_container.iterate(function (block) {
+                block.y -= 60;
+            });
+
+            block_container.y += 60;
+            this.shiftFocus('up', boxCursor);
         }
 
 
@@ -747,21 +794,21 @@ class SingleplayerGameScene extends Phaser.Scene {
 
     incrementIndex() {
 
-        if (primaryBlockIndex[1] != 7) {
-            primaryBlockIndex[1] += 1;
+        if (primaryBlockIndex[1] != 420) {
+            primaryBlockIndex[1] += 60;
         } else {
             primaryBlockIndex[1] = 0;
-            primaryBlockIndex[0] += 1;
+            primaryBlockIndex[0] += 60;
         }
     }
 
     decrementIndex() {
 
         if (primaryBlockIndex[1] != 0) {
-            primaryBlockIndex[1] -= 1;
+            primaryBlockIndex[1] -= 60;
         } else {
-            primaryBlockIndex[1] = 7;
-            primaryBlockIndex[0] -= 1;
+            primaryBlockIndex[1] = 420;
+            primaryBlockIndex[0] -= 60;
         }
     }
 
@@ -811,14 +858,14 @@ class SingleplayerGameScene extends Phaser.Scene {
 
         let repeatedColor = randomBlocks[Math.floor(rng() * 8)]; // choose the index of the color to repeat
         randomBlocks.push(repeatedColor);
-        let blockPool =  randomBlocks;// keep track of how many times the repeated color has appeared
+        let blockPool = randomBlocks;// keep track of how many times the repeated color has appeared
         blockPool = this.shuffle(blockPool.slice(), rng);
         blockPool.pop();
 
         for (let index = 0; index < 8; index++) {
             const baseBlock = new BaseBlock(this, index * 60, increment, blockPool[index]);
-            baseBlock.setName('Block' + (nameIncrement) + "-" + index);
-            baseBlock.setData({ color: blockPool[index], x: nameIncrement, y: index, matched: false });
+            //baseBlock.setName('Block' + (nameIncrement) + "-" + index);
+            baseBlock.setData({ color: blockPool[index], matched: false });
             baseBlock.setTint(0x808080);
             results.push(baseBlock);
         }
@@ -835,7 +882,7 @@ class SingleplayerGameScene extends Phaser.Scene {
     addRow() {
         var row = this.makeRow((lineRow * 60));
         block_container.add(row);
-        lineRow += 1;
+        // lineRow += 1;
 
 
     }
@@ -876,8 +923,8 @@ class SingleplayerGameScene extends Phaser.Scene {
     }
 
     indexForPosition(x, y) {
-        x = x/60;
-        y = y/60;
+        x = x / 60;
+        y = y / 60;
         //console.log('x'+x+'|y: '+ y)
         return (y * 8 + x);
     }
