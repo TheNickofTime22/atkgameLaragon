@@ -1,0 +1,85 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: large;
+    color: white;
+}
+
+.card {
+    background-color: rgb(43, 43, 43);
+}
+
+.borderTesting {
+    box-shadow: rgb(255, 0, 0) 0px 1px 4px, rgb(255, 0, 0) 0px 0px 0px 3px;
+}
+
+.bannerHolder {
+
+    margin-left: 150px;
+    margin-right: 150px;
+    height: 25vh;
+    background-size: cover;
+    background-repeat: no-repeat;
+
+
+
+    border: 5px solid #fff;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+
+}
+
+.profile-section {
+    height: calc(100vh - 80px);
+    background-color: #f8f9fa;
+    position: relative;
+}
+.profile-image {
+    position: absolute;
+    top: 11%;
+    left: 5%;
+    width: 300px;
+    height: 300px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 50%;
+
+    border: 5px solid #fff;
+    box-shadow: 0px 2px 5px rgba(0,0,0,0.3);
+}
+.profile-details {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+.edit-button {
+    margin-top: 20px;
+}
+
+.imgEditBtn {
+    border-radius: 50%;
+    border: 5px solid #fff;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+    width: 60px;
+    height: 60px;
+    top: 90%;
+    left: 70%;
+    position: relative;
+    z-index: 1;
+}
+
+.card-header {
+    background-color: gray;
+}
+
+.body {
+    background-color: black;
+}
+
+.mainNav {
+    background: rgb(0, 0, 0);
+    background: linear-gradient(27deg, rgba(0, 0, 0, 1) 54%, rgba(36, 196, 0, 1) 100%);
+}

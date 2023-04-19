@@ -1,0 +1,125 @@
+{
+    "frames": [
+        {
+            "filename": "orange_block_lg",
+            "frame": {
+                "w": 57,
+                "h": 57,
+                "x": 0,
+                "y": 0
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "pink_block_lg",
+            "frame": {
+                "w": 57,
+                "h": 57,
+                "x": 57,
+                "y": 0
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "purple_block_lg",
+            "frame": {
+                "w": 57,
+                "h": 57,
+                "x": 0,
+                "y": 57
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "red_block_lg",
+            "frame": {
+                "w": 57,
+                "h": 57,
+                "x": 57,
+                "y": 57
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "blue_block_lg",
+            "frame": {
+                "w": 57,
+                "h": 57,
+                "x": 114,
+                "y": 0
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "gold_block_lg",
+            "frame": {
+                "w": 57,
+                "h": 57,
+                "x": 114,
+                "y": 57
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "green_block_lg",
+            "frame": {
+                "w": 57,
+                "h": 57,
+                "x": 0,
+                "y": 114
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "indigo_block_lg",
+            "frame": {
+                "w": 57,
+                "h": 57,
+                "x": 57,
+                "y": 114
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        },
+        {
+            "filename": "null_block_lg",
+            "frame": {
+                "w": 57,
+                "h": 57,
+                "x": 114,
+                "y": 114
+            },
+            "anchor": {
+                "x": 0.5,
+                "y": 0.5
+            }
+        }
+    ],
+    "meta": {
+        "description": "Atlas generado con Atlas Packer Gamma V2",
+        "web": "https://gammafp.github.io/atlas-packer-phaser/"
+    }
+}
