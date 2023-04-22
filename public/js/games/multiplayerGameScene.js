@@ -567,8 +567,8 @@ class MultiplayerGameScene extends Phaser.Scene {
         // SPEED CONTROL
         block_containerRiseSpeed += (block_containerSpeed * delta);
 
-        //main_container.y = (0 - block_containerRiseSpeed);
-        //red_main_container.y = (0 - block_containerRiseSpeed);
+        main_container.y = (0 - block_containerRiseSpeed);
+        red_main_container.y = (0 - block_containerRiseSpeed);
 
 
         if (block_container.getBounds().y <= 68) {
@@ -592,15 +592,23 @@ class MultiplayerGameScene extends Phaser.Scene {
         if ((time % 60) == 0) {
 
             this.eliminateRow();
-            this.matchof4Vert();
+
+            this.matchof4Vert(block_container);
+            this.matchof4Vert(red_block_container);
+
             this.matchOf3Vert(block_container);
             this.matchOf3Vert(red_block_container);
-            this.matchof4Hori();
-            this.matchOf3Hori();
+
+            this.matchof4Hori(block_container);
+            this.matchof4Hori(red_block_container);
+
+            this.matchOf3Hori(block_container);
+            this.matchOf3Hori(red_block_container);
             this.activateBlocks();
 
 
-            this.bubbleUpNull();
+            this.bubbleUpNull(red_visible_blocks);
+            this.bubbleUpNull(blue_visible_blocks);
             score_display.setText(game_score_display);
         }
         // if (delay == 100){
@@ -640,40 +648,51 @@ class MultiplayerGameScene extends Phaser.Scene {
 
     }
 
-    bubbleUpNull() {
-        try {
+    bubbleUpNull(visible_blocks) {
 
-            red_visible_blocks.forEach(block => {
-                let first_position = [block.x, block.y];
-                console.log(first_position)
+        let nullArray = [];
+        // an array with keys 0-420 to represent each column
+        let columnArray = {};
 
-            });
-            // for (let row = 0; row < numRows - 1; row++) {
-            //     for (let column = 0; column < 8; column++) {
+        // Initialize columnArray with keys for each column
+        for (let i = 0; i <= 420; i += 60) {
+            columnArray[i.toString()] = [];
+        }
+        // Iterate over blue_visible_blocks to find null blocks
+        visible_blocks.getChildren().forEach(function (block) {
+            if (block.x.toString() in columnArray) {
+                columnArray[block.x.toString()].push(block);
+            }
 
-            //         let top = (8 * row) + column
-            //         let bot = (8 * (row + 1)) + column
+        });
 
-            //         let block1 = block_container.getAt(top);
-            //         //console.log(block1)
-            //         let block2 = block_container.getAt(bot);
+        //iterate through the new compiled dictionary of columns to determin the correct colors, and set the textures accordingly
+        for (let key in columnArray) {
+            let arrayOfNullsInColumn = [];
+            let newColors = [];
 
-            //         let red_block1 = red_block_container.getAt(top);
-            //         //console.log(block1)
-            //         let red_block2 = red_block_container.getAt(bot);
+            let myArray = columnArray[key];
+            for (let block of myArray) {
 
-            //         //console.log(block2)
+                let color = block.texture.key;
+                if (color === "null_block") {
+                    arrayOfNullsInColumn.push(block);
+                } else {
+                    newColors.push(block.texture.key);
+                }
+            }
+            for (let nullblock of arrayOfNullsInColumn) {
 
-            //         if (block2.getData('color') == 'null_block' && block1.getData('color') != 'null_block') {
-            //             this.swapColors(block1, block2);
-            //         }
-            //         if (red_block2.getData('color') == 'null_block' && red_block1.getData('color') != 'null_block') {
-            //             this.swapColors(red_block1, red_block2);
-            //         }
-            //     }
-            // }
-        } catch (error) {
-            return;
+                newColors.unshift(nullblock.texture.key);
+            }
+            for (let index = 0; index < newColors.length; index++) {
+
+                columnArray[key][index].setTexture(newColors[index]);
+
+                columnArray[key][index].setData('color', newColors[index]);
+
+            }
+
         }
     }
 
@@ -713,7 +732,7 @@ class MultiplayerGameScene extends Phaser.Scene {
             return
         }
     }
-    matchOf3Hori() {
+    matchOf3Hori(container) {
 
         try {
             for (let row = 0; row < numRows - 1; row++) {
@@ -723,9 +742,9 @@ class MultiplayerGameScene extends Phaser.Scene {
                     let mid = (8 * row) + column + 1
                     let end = (8 * row) + column + 2
 
-                    let block1 = block_container.getAt(start);
-                    let block2 = block_container.getAt(mid);
-                    let block3 = block_container.getAt(end);
+                    let block1 = container.getAt(start);
+                    let block2 = container.getAt(mid);
+                    let block3 = container.getAt(end);
 
                     let color = block1.getData('color');
 
@@ -754,7 +773,7 @@ class MultiplayerGameScene extends Phaser.Scene {
         }
     }
 
-    matchof4Vert() {
+    matchof4Vert(container) {
         try {
             for (let row = 0; row < numRows - 2; row++) {
                 for (let column = 0; column < 8; column++) {
@@ -764,10 +783,10 @@ class MultiplayerGameScene extends Phaser.Scene {
                     let mid2 = (8 * (row + 2)) + column
                     let bot = (8 * (row + 3)) + column
 
-                    let block1 = block_container.getAt(top);
-                    let block2 = block_container.getAt(mid1);
-                    let block3 = block_container.getAt(mid2);
-                    let block4 = block_container.getAt(bot);
+                    let block1 = container.getAt(top);
+                    let block2 = container.getAt(mid1);
+                    let block3 = container.getAt(mid2);
+                    let block4 = container.getAt(bot);
 
                     let color = block1.getData('color');
 
@@ -791,7 +810,7 @@ class MultiplayerGameScene extends Phaser.Scene {
             return
         }
     }
-    matchof4Hori() {
+    matchof4Hori(container) {
         try {
             for (let row = 0; row < numRows - 1; row++) {
                 for (let column = 0; column < 5; column++) {
@@ -801,10 +820,10 @@ class MultiplayerGameScene extends Phaser.Scene {
                     let mid2 = (8 * row) + column + 2
                     let end = (8 * row) + column + 3
 
-                    let block1 = block_container.getAt(start);
-                    let block2 = block_container.getAt(mid1);
-                    let block3 = block_container.getAt(mid2);
-                    let block4 = block_container.getAt(end);
+                    let block1 = container.getAt(start);
+                    let block2 = container.getAt(mid1);
+                    let block3 = container.getAt(mid2);
+                    let block4 = container.getAt(end);
 
                     let color = block1.getData('color');
 

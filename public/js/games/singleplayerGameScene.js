@@ -305,49 +305,47 @@ class SingleplayerGameScene extends Phaser.Scene {
         if (Phaser.Input.Keyboard.JustDown(left) && boxcursorRect.x > 726) {
             boxCursor.x -= 60;
             this.shiftFocus('left');
+            this.bubbleUpNull();
             //console.log("input--l");
 
         } else if (Phaser.Input.Keyboard.JustDown(right) && boxcursorRect.x < 1080) {
             boxCursor.x += 60;
             this.shiftFocus('right');
+            this.bubbleUpNull();
             //console.log("input--r");
         }
 
         if (Phaser.Input.Keyboard.JustDown(up) && boxcursorRect.y > 65) {
             boxCursor.y -= 60;
             this.shiftFocus('up');
+            this.bubbleUpNull();
             //console.log("input--u");
 
         } else if (Phaser.Input.Keyboard.JustDown(down) && boxcursorRect.y < 842) {
             boxCursor.y += 60;
             this.shiftFocus('down');
+            this.bubbleUpNull();
             //console.log("input--d");
         }
 
         if (boxcursorRect.y < 65) {
             boxCursor.y += 60;
             this.shiftFocus('down');
+            this.bubbleUpNull();
         }
 
         if (Phaser.Input.Keyboard.JustDown(swap)) {
-            // block_container.remove(primaryBlock);
+            if (primaryBlock.getData('matched') == false && secondaryBlock.getData('matched') == false) {
+                if (primaryBlock == null || secondaryBlock == null) {
 
-            //const color1 = primaryBlock.getData('color');
-            // const color2 = secondaryBlock.getData('color');
-            // if (color1 === 'bomb_block' || color2 === 'bomb_block') {
-            //     if (color1 === 'bomb_block' && color2 !== 'bomb_block') {
-            //         this.bombExplosion(block1);
-            //     } else if (color2 === 'bomb_block' && color1 !== 'bomb_block') {
-            //         this.bombExplosion(block2);
-            //     } else if (color1 === 'bomb_block' && color1 === 'bomb_block'){
-            //         this.bigBombExplosion();
-            //     } else {
-
-            if (primaryBlock == null || secondaryBlock == null) {
-
-            } else {
-                this.swapColors(primaryBlock, secondaryBlock);
+                } else {
+                    // console.log(primaryBlock.getData('matched'))
+                    this.swapColors(primaryBlock, secondaryBlock);
+                }
+                this.bubbleUpNull();
             }
+
+
         }
 
 
@@ -376,20 +374,25 @@ class SingleplayerGameScene extends Phaser.Scene {
 
             }
 
-            this.bubbleUpNull();
+
 
 
         }
 
         if (Phaser.Input.Keyboard.JustDown(bugR)) {
-            console.log(primaryBlock, secondaryBlock)
+
+            let indexPrimary = block_container.getIndex(primaryBlock);
+            let indexSecondary = block_container.getIndex(secondaryBlock);
+
+            block_container.moveTo(block_container.getAt(0), indexSecondary)
+
 
         }
 
         if (Phaser.Input.Keyboard.JustDown(bugE)) {
             console.log(primaryBlock.getData('color'), primaryBlock.x, primaryBlock.y);
 
-            console.log(blue_visible_blocks.children);
+            //console.log(blue_visible_blocks.children);
         }
 
 
@@ -407,8 +410,8 @@ class SingleplayerGameScene extends Phaser.Scene {
 
         // SPEED CONTROL
         block_containerRiseSpeed += (block_containerSpeed * delta);
-
-        main_container.y = (0 - block_containerRiseSpeed);
+        // what makes blocks rise:
+        //main_container.y = (0 - block_containerRiseSpeed);
 
 
         if (main_container.getBounds().y <= 68) {
@@ -441,10 +444,10 @@ class SingleplayerGameScene extends Phaser.Scene {
         if ((time % 60) == 0) {
 
             this.eliminateRow();
-            //this.matchof4Vert();
+            this.matchof4Vert();
             this.matchOf3Vert();
-            //this.matchof4Hori();
-            //this.matchOf3Hori();
+            this.matchof4Hori();
+            this.matchOf3Hori();
             this.activateBlocks();
 
             this.eliminateRow();
@@ -473,9 +476,8 @@ class SingleplayerGameScene extends Phaser.Scene {
     }
 
     bubbleUpNull() {
+
         let nullArray = [];
-
-
         // an array with keys 0-420 to represent each column
         let columnArray = {};
 
@@ -483,61 +485,86 @@ class SingleplayerGameScene extends Phaser.Scene {
         for (let i = 0; i <= 420; i += 60) {
             columnArray[i.toString()] = [];
         }
-
         // Iterate over blue_visible_blocks to find null blocks
         blue_visible_blocks.getChildren().forEach(function (block) {
-            if (block.texture.key === 'null_block') {
-                nullArray.push(block);
+            if (block.x.toString() in columnArray) {
+                columnArray[block.x.toString()].push(block);
             }
+            // if (block.texture.key === 'null_block') {
+            //     nullArray.push(block);
+            // }
         });
 
-        // add nulls to the column their in
-        nullArray.forEach(function (nullblock) {
-            if (nullblock.x in columnArray) {
-                columnArray[nullblock.x.toString()].push(nullblock);
+        //iterate through the new compiled dictionary of columns to determin the correct colors, and set the textures accordingly
+        for (let key in columnArray) {
+            let arrayOfNullsInColumn = [];
+            let newColors = [];
+
+            let myArray = columnArray[key];
+            for (let block of myArray) {
+
+                let color = block.texture.key;
+                if (color === "null_block") {
+                    arrayOfNullsInColumn.push(block);
+                } else {
+                    newColors.push(block.texture.key);
+                }
             }
-        });
-        // columnArray is now a dictionary with the keys = to the string of the x coordinate related to the column is equal to the array of nullblocks in that column
+            for (let nullblock of arrayOfNullsInColumn) {
 
-        // note: if a column has a null in row 0, ignore it. If it has one in row 0, and 60, ignore 60
-
-
-        columnArray.forEach(function(columnOfNulls){
-            // go through the first column, find the highest null
-            columnOfNulls[0].sort((a, b) => a.y + b.y);
-            columnOfNulls.forEach(block => {
-                // get the "highest" row y value null block, swap it with the one above it, do it until
-                this.riseANull(block_container.getAt(block.x, block.y - 60), block_container.getAt(block.x, block.y))
-
-            });
+                newColors.unshift(nullblock.texture.key);
+            }
+            for (let index = 0; index < newColors.length; index++) {
+                // console.log("columnarrayblock:")
+                // console.log(columnArray[key][index].texture.key);
+                // console.log("newcolor:")
+                // console.log(newColors[index]);
 
 
-        });
+                columnArray[key][index].setTexture(newColors[index]);
 
+                columnArray[key][index].setData('color', newColors[index]);
+
+            }
+
+        }
+        console.log(columnArray);
     }
 
-    riseANull(coloredBlock, nullBlock){
-        const color1 = coloredBlock.texture.key;
-        const color2 = nullBlock.texture.key;
+    moveNullBlocksToTop(columnArray) {
+        // Iterate over each column in columnArray
+        for (let columnKey in columnArray) {
+            let column = columnArray[columnKey];
+            let newColumn = [];
 
+            // Iterate over each block in the column
+            for (let i = 0; i < column.length; i++) {
+                let block = column[i];
 
-        if (color1 !== color2) {
-            block1.setTexture(color2);
-            block2.setTexture(color1);
+                // If the block is null, skip it
+                if (block.texture.key === 'null_block') {
+                    continue;
+                }
 
-            block1.setData('color', color2);
-            block2.setData('color', color1);
+                // Otherwise, add the block to the new column array
+                newColumn.push(block);
+
+                // If we've reached the end of the original column array,
+                // pad the new column with null blocks up to the full height
+                if (i === column.length - 1) {
+                    let nullBlocksToAdd = column.length - newColumn.length;
+                    for (let j = 0; j < nullBlocksToAdd; j++) {
+                        newColumn.unshift(null);
+                    }
+                }
+            }
+            // Replace the original column array with the new one
+            //columnArray[columnKey] = newColumn;
         }
     }
 
-    givenNulls_returnNewColumn(array){
-        let highestColoredLevel = 0;
-        if(array[0] === 0){
-            highestColoredLevel = 60;
-        } else if(array[0] === 60){
-            highestColoredLevel += 60;
-        }
-    }
+
+
 
 
     matchOf3Vert() {
@@ -761,11 +788,29 @@ class SingleplayerGameScene extends Phaser.Scene {
     }
 
     swapColors(block1, block2) {
+        //console.log(block1, block2);
         const color1 = block1.getData('color');
         const color2 = block2.getData('color');
 
 
         if (color1 !== color2) {
+
+            // this.tweens.add({
+            //     targets: leftBlock,
+            //     duration: 100,
+            //     x: destX,
+            //     y: destY,
+            //     onComplete: () => {
+            //         // Swap the positions of the blocks in the container
+            //         const leftIndex = container.getIndex(leftBlock);
+            //         const rightIndex = container.getIndex(rightBlock);
+            //         container.moveDown(leftBlock);
+            //         container.moveDown(rightBlock);
+            //         container.setIndex(leftBlock, rightIndex);
+            //         container.setIndex(rightBlock, leftIndex);
+            //     }
+            // });
+
             block1.setTexture(color2);
             block2.setTexture(color1);
 
