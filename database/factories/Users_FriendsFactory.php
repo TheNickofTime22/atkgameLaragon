@@ -17,8 +17,8 @@ class Users_FriendsFactory extends Factory
     public function definition(): array
     {
         return [
-            'source_id' => fake()->uniqid(),
-            'target_id' => fake()->uniqid(),
+            // 'source_id' => fake()->uniqid(),
+            // 'target_id' => fake()->uniqid(),
         ];
     }
 }

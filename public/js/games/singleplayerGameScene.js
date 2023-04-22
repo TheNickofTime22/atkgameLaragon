@@ -411,7 +411,7 @@ class SingleplayerGameScene extends Phaser.Scene {
         // SPEED CONTROL
         block_containerRiseSpeed += (block_containerSpeed * delta);
         // what makes blocks rise:
-        //main_container.y = (0 - block_containerRiseSpeed);
+        main_container.y = (0 - block_containerRiseSpeed);
 
 
         if (main_container.getBounds().y <= 68) {
