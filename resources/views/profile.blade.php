@@ -127,8 +127,8 @@
                         <table class="table table-hover table-nowrap">
 
                             <tbody>
-                                @if($friends != null)
-                                @foreach($friends as $friend)
+                                {{-- @if($friends != null)
+                                @foreach($friends as $friend) --}}
                                 <tr>
                                     <td>
                                         <img alt="..." src="{{ asset('img/profile/'.$friend->pfp) }}"
@@ -138,7 +138,7 @@
                                     </td>
                                     <td>
                                         <h4 class="text-heading font-semibold" href="#">
-                                            {{$friend->screenname}}
+                                            {{-- {{$friend->screenname}} --}}
                                         </h4>
                                     </td>
 
@@ -149,8 +149,8 @@
                                     </td>
 
                                 </tr>
-                                @endforeach
-                                @endif
+                                {{-- @endforeach
+                                @endif --}}
 
 
                             </tbody>
