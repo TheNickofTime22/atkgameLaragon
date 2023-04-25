@@ -88,7 +88,7 @@ class SingleplayerGameScene extends Phaser.Scene {
 
         secondaryBlockIndex = [primaryBlockIndex[0], primaryBlockIndex[1] + 60];
 
-        numRows = 4; // HOW MANY ROWS SPAWN
+        numRows = 14; // HOW MANY ROWS SPAWN
 
         main_container_blockLevel = 3;
 
@@ -106,9 +106,9 @@ class SingleplayerGameScene extends Phaser.Scene {
 
         timer_hours = 0;
 
-        timer_min = this.timer ? 0 : 0;
+        timer_min = this.timer ? 1 : 0;
 
-        timer_seconds = this.timer ? 120 : 0;
+        timer_seconds = this.timer ? 0 : 0;
 
         game_score_display = 0;
 
@@ -122,10 +122,9 @@ class SingleplayerGameScene extends Phaser.Scene {
 
         lineRow = numRows;
 
-        rngSeedInt = 'booga';
+        rngSeedInt = Math.random().toString(36).substring(2, 7);
 
         blue_visible_blocks = this.add.group();;
-
     }
 
 
