@@ -369,6 +369,13 @@ class SingleplayerGameScene extends Phaser.Scene {
         }
 
         if (Phaser.Input.Keyboard.JustDown(swap) && (primaryBlock && secondaryBlock && !primaryBlock.getData('matched') && !secondaryBlock.getData('matched'))) {
+            console.log([
+                primaryBlock,
+                secondaryBlock,
+                !primaryBlock.getData('matched'),
+                !secondaryBlock.getData('matched')
+            ])
+
             this.swapColors(primaryBlock, secondaryBlock);
         }
 
@@ -612,7 +619,6 @@ class SingleplayerGameScene extends Phaser.Scene {
 
         for (let index = 0; index < 8; index++) {
             const baseBlock = new BaseBlock(this, index * 60, increment, blockPool[index]);
-            //baseBlock.setName('Block' + (nameIncrement) + "-" + index);
             baseBlock.setData({ color: blockPool[index], matched: false });
             baseBlock.setTint(0x808080);
             results.push(baseBlock);

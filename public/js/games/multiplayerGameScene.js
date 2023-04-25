@@ -1,90 +1,123 @@
 import { BaseBlock } from './BaseBlock.js';
 
 
+// var block_container;
+// var red_block_container;
+
+// var main_container;
+// var red_main_container;
+
+// var debugText;
+// var cursorXYText;
+// var lineRow;
+// var red_lineRow;
+
+// // object details
+// var boxCursor;
+// var boxCursor2
+// var boxcursorRect;
+// var block_acceleration = 0.115;
+// var block_containerSpeed = 0.015;
+// var rowIncrement = 0;
+// var primaryBlock;
+// var secondaryBlock;
+// var primaryBlockIndex = [0, 3];
+// var secondaryBlockIndex = [primaryBlockIndex[0], primaryBlockIndex[1] + 1];
+// // ))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+// var primaryBlock_2p;
+// var secondaryBlock_2p;
+// var primaryBlockIndex_2p = [0, 3];
+// var blockColors = ["gold_block", "red_block", "blue_block", "green_block", "orange_block", "pink_block", "purple_block", "indigo_block"];
+
+// // Game rules
+// var numRows;
+// var left, right, up, down, swap, bugR, bugE, remove, speedUpBtn;
+
+// // check match
+// var checkLength = 10;
+
+// // score
+// var game_time_display, time_display; // keeps track of game time
+// var timer_hours, timer_min, timer_seconds;
+// var game_score_display, score_display, speed_display; // current score from matches
+// var game_mode_display; // current gamemode
+// var game_speed_display; // current game speed
+// var game_speed_text;
+// var game_speed = 1.00;
+// var timer;
+
+// let rngSeedSource;
+// let red_RNG;
+// let blue_RNG;
+// let blue_visible_blocks;
+// let red_visible_blocks;
+// let columnArray;
+
+
+
+// Block containers
 var block_container;
 var red_block_container;
 
+// Main containers
 var main_container;
 var red_main_container;
 
-var debugText;
-var cursorXYText;
+// Debugging text
 var lineRow;
 var red_lineRow;
 
-// object details
+// Object details
 var boxCursor;
-var boxCursor2
-var main_container_blockLevel;
-
+var boxCursor2;
 var boxcursorRect;
 var block_acceleration = 0.115;
 var block_containerSpeed = 0.015;
+var rowIncrement = 0;
 
-
-var block_containerChildren;
-var red_block_containerChildren;
-
-
-var delay = 0;
-
-var nameIncrement = 0;
-
+// Primary and secondary blocks
 var primaryBlock;
 var secondaryBlock;
-
-var FIRST_ROW_OF_NULLS;
-var primaryBlockName;
-var primaryBlockIndex = [0, 3];
-
-var secondaryBlockName;
-var secondaryBlockIndex = [primaryBlockIndex[0], primaryBlockIndex[1] + 1];
-// ))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+var primaryBlockIndex = [0, 180];
+var secondaryBlockIndex = [primaryBlockIndex[0], primaryBlockIndex[1] + 60];
 var primaryBlock_2p;
 var secondaryBlock_2p;
+var primaryBlockIndex_2p = [0, 180];
 
 
-var primaryBlockName_2p;
-var primaryBlockIndex_2p = [0, 3];
-
-var secondaryBlockName_2p;
-var secondaryBlockIndex_2p = [primaryBlockIndex_2p[0], primaryBlockIndex_2p[1] + 1];
-
-
+// Block colors
 var blockColors = ["gold_block", "red_block", "blue_block", "green_block", "orange_block", "pink_block", "purple_block", "indigo_block"];
-
 
 // Game rules
 var numRows;
-var left, right, up, down, swap, bugR, bugE, remove, speedUpBtn;
+var left, right, up, down, swap, bugR, bugE, bugQ, speedUpBtn;
 
-
-// check match
+// Check match
 var checkLength = 10;
 
-var checkStart = 0;
-
-// score
-
-var game_time_display, time_display; // keeps track of game time
-var timer_hours, timer_min, timer_seconds;
-
-var game_score_display, score_display, speed_display; // current score from matches
-
-var game_mode_display; // current gamemode
-
-var game_speed_display; // current game speed
-var game_speed_text;
+// Score
+// var game_time_display;
+// var time_display; // Keeps track of game time
+// var timer_hours;
+// var timer_min;
+// var timer_seconds;
+// var game_score_display;
+// var score_display;
+// var speed_display; // Current score from matches
+// var game_mode_display; // Current gamemode
+// var game_speed_display; // Current game speed
+// var game_speed_text;
 var game_speed = 1.00;
+//var timer;
 
-var timer;
-var user;
-var self;
+// RNG and visible blocks
 let rngSeedSource;
 let red_RNG;
 let blue_RNG;
 let blue_visible_blocks;
 let red_visible_blocks;
+
+// Column array
 let columnArray;
 class MultiplayerGameScene extends Phaser.Scene {
 
@@ -104,72 +137,56 @@ class MultiplayerGameScene extends Phaser.Scene {
         this.rngSeed = data.rngSeed;
         this.currentMatch = this.ably.channels.get(data.channelName);
 
-        console.log('currentMatch is made with channelname')
+        // Debugging
+        console.log('currentMatch is made with channelname');
+
+        // Block and row details
         block_acceleration = 0.000005;
-        nameIncrement = 0;
-        primaryBlockIndex = [0, 3];
-        secondaryBlockIndex = [primaryBlockIndex[0], primaryBlockIndex[1] + 1];
+        rowIncrement = 0;
+        primaryBlockIndex = [0, 180];
+        secondaryBlockIndex = [primaryBlockIndex[0], primaryBlockIndex[1] + 60];
+        numRows = 14;
 
-        numRows = 8;
-        main_container_blockLevel = 4;
-
-
-        block_containerChildren = [];
-        red_block_containerChildren = [];
-
-
-        debugText;
-
-        game_speed_display;
-        game_speed_text; // current game speed
-
+        // Game speed
+        //game_speed_display;
+        //game_speed_text; // Current game speed
         game_speed = 1.00;
 
-
-        //
+        // Match checking
         checkLength = 5;
-        checkStart = 0;
-        //
 
-        //MODE
-        //timer = data.timer;
-        //
-        FIRST_ROW_OF_NULLS = [];
+        // Game mode
+        // timer_hours = 0;
+        // timer_min = 0;
+        // timer_seconds = 0;
+        //game_score_display = 0;
+        //score_display; // Current score from matches
 
-        timer_hours = 0;
-        timer_min = 0;
-        timer_seconds = 0;
-        game_score_display = 0, score_display; // current score from matches
+        // if (timer) {
+        //     game_mode_display = "Time Trial"; // Current gamemode
+        // } else {
+        //     game_mode_display = "Endless"; // Current gamemode
+        // }
 
-        if (timer) {
-            game_mode_display = "Time Trial"; // current gamemode
-        } else {
-            game_mode_display = "Endless"; // current gamemode
-        }
+        //game_speed_display = "<< " + game_speed.toFixed(2) + " >>"; // Current game speed
 
-        game_speed_display = "<< " + game_speed.toFixed(2) + " >>"; // current game speed
-
+        // Containers
         block_container;
         main_container;
-
-
         red_block_container;
         red_main_container;
 
-
+        // Row details
         lineRow = numRows;
         red_lineRow = numRows;
+
+        // RNG and visible blocks
         self = this;
         rngSeedSource = this.rngSeed;
-        //RowRngOffset = 1;
         red_RNG = new Math.seedrandom(rngSeedSource);
         blue_RNG = new Math.seedrandom(rngSeedSource);
-
-        //
-
-        blue_visible_blocks;
-        red_visible_blocks;
-
+        blue_visible_blocks = this.add.group();
+        red_visible_blocks = this.add.group();
         columnArray = {};
     };
 
@@ -200,66 +217,61 @@ class MultiplayerGameScene extends Phaser.Scene {
 
 
     create() {
+        /*------------------------------------------------------------------------------------------------------------------------------------------
 
 
-        blue_visible_blocks = this.add.group();
-        red_visible_blocks = this.add.group();
+                    <<Create currentMatch listener event, listening for keypresses.
 
 
-
-        console.log('PRE-subscribe event:');
+*/
         this.currentMatch.subscribe('player-keypress', (message) => {
             console.log('------player-keypress heard something-------')
-        if(message.data.user.id != this.user.id){
-            switch (message.data.key) {
-                case 'left':
-                    console.log('leftPress;')
-                    this.shiftFocus('left', boxCursor2)
-                    break;
-                case 'right':
-                    this.shiftFocus('right', boxCursor2)
-                    break;
-                case 'up':
-                    this.shiftFocus('up', boxCursor2)
-                    break;
-                case 'down':
-                    this.shiftFocus('down', boxCursor2)
-                    break;
-                case 'space':
-                    this.swapColors(primaryBlock_2p, secondaryBlock_2p)
-                    break;
-                case 'shift':
-                    //this.speedUp();
-                    break;
-                default:
-                    break;
+            if (message.data.user.id != this.user.id) {
+                switch (message.data.key) {
+                    case 'left':
+                        console.log('leftPress;')
+                        this.shiftFocus('left', boxCursor2)
+                        break;
+                    case 'right':
+                        this.shiftFocus('right', boxCursor2)
+                        break;
+                    case 'up':
+                        this.shiftFocus('up', boxCursor2)
+                        break;
+                    case 'down':
+                        this.shiftFocus('down', boxCursor2)
+                        break;
+                    case 'space':
+                        this.swapColors(primaryBlock_2p, secondaryBlock_2p)
+                        break;
+                    case 'shift':
+                        //this.speedUp();
+                        break;
+                    default:
+                        break;
+                }
             }
-        }
-    });
+        });
+        /*------------------------------------------------------------------------------------------------------------------------------------------
 
 
+                    <<Created background
 
+
+*/
         // add background and border
         var bg = this.add.image(0, 0, 'white_background');
         bg.setOrigin(0, 0);
         bg.displayWidth = this.sys.canvas.width;
         bg.displayHeight = this.sys.canvas.height;
-        // -------------------------
+        /*------------------------------------------------------------------------------------------------------------------------------------------
 
-        // TESTING SQUARE
-        //var testPlus = this.add.image(0.5, 0.5, "testPlus").setScale(4);
-        // ---------------
 
-        // Add block_container, position origin at cent of screen offset -210
+                            <<Created BLUE block container and main container, populated with grid and blue_rng call.
 
+
+        */
         block_container = this.add.container((screen.width / 4) - 210, screen.height / 2 + 215, this.makeGrid(numRows, blue_RNG).flat());
-        const block = new BaseBlock(this, 200, 200, 'red_block');
-        block.spinToDisappear();
-
-        //console.log(block.scaleX, block.scaleY);
-        ///console.log(block.visible);
-        // ------------------------------------------------------------
-
         main_container = this.add.container(0, 0);
         main_container.add(block_container);
 
@@ -267,34 +279,7 @@ class MultiplayerGameScene extends Phaser.Scene {
         // Add blue bordered game boundry
         var grid_box = this.add.container(screen.width / 4, (screen.height / 2))
         grid_box.add([this.add.image(0, 10, "blueBorder")]);
-        this.add.text(240, -20, "_______________", { font: '92px Bernard', fill: '#000000' });
-
-
-
-        // (#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@)
-
-        red_block_container = this.add.container((screen.width / 1.5) + 111, screen.height / 2 + 215, this.makeGrid(numRows, red_RNG, false).flat());
-
-        // ----------------------------------------------------------------------------
-
-        red_main_container = this.add.container(0, 0);
-        red_main_container.add(red_block_container);
-
-
-        var red_grid_box = this.add.container(screen.width / 1.2, (screen.height / 2))
-        red_grid_box.add([this.add.image(0, 10, "redBorder")]);
-        this.add.text(240, -20, "_______________", { font: '92px Bernard', fill: '#000000' });
-        // (#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@)
-
-
-        // --------------------------------
-        red_block_container.each(sprite => {
-            if (sprite.y < 780) {
-                red_visible_blocks.add(sprite);
-                sprite.setAlpha(1);
-            }
-        });
-
+        this.add.text(230, -20, "___________", { font: '92px Bernard', fill: '#000000' });
 
         block_container.each(sprite => {
             if (sprite.y < 780) {
@@ -302,60 +287,76 @@ class MultiplayerGameScene extends Phaser.Scene {
                 sprite.setAlpha(1);
             }
         });
+        /*------------------------------------------------------------------------------------------------------------------------------------------
 
-        block_container.on('childMoved', (child) => {
-            if (child.y < 780) {
-                console.log("blue Listened...")
-                blue_visible_blocks.add(child);
-                child.setAlpha(1);
+
+                            <<Created RED block container and main container, populated with grid and blue_rng call.
+
+
+        */
+        red_block_container = this.add.container((screen.width / 1.5) + 111, screen.height / 2 + 215, this.makeGrid(numRows, red_RNG, false).flat());
+        red_main_container = this.add.container(0, 0);
+        red_main_container.add(red_block_container);
+
+        var red_grid_box = this.add.container(screen.width / 1.2, (screen.height / 2))
+        red_grid_box.add([this.add.image(0, 10, "redBorder")]);
+        this.add.text(1350, -20, "___________", { font: '92px Bernard', fill: '#000000' });
+
+        red_block_container.each(sprite => {
+            if (sprite.y < 780) {
+                red_visible_blocks.add(sprite);
+                sprite.setAlpha(1);
             }
         });
 
-        red_block_container.on('childMoved', (child) => {
-            if (child.y < 780) {
-                red_visible_blocks.add(child);
-                child.setAlpha(1);
-            }
-        });
-        // --------------------------------
+        /*------------------------------------------------------------------------------------------------------------------------------------------
+                            <<Create Scoreboard, MUST CHANGE LATER, NO SCORE IS BEING KEPT
 
-        // scoreboard
+        */
+        // var score_box = this.add.container(screen.width / 1.97, (screen.height / 2.55));
+        // score_box.add([this.add.image(0, 0, "score_board")]);
 
-        var score_box = this.add.container(screen.width / 1.97, (screen.height / 2.55));
-        score_box.add([this.add.image(0, 0, "score_board")]);
+        // score_box.add(this.add.text(-30, -300, 'Time', { font: '32px Bernard', fill: '#000000' }));
+        // score_box.add(time_display = this.add.text(-40, -250, ':: ' + game_time_display + ' ::', { font: '32px Bernard', fill: '#000000' }));
 
-        score_box.add(this.add.text(-30, -300, 'Time', { font: '32px Bernard', fill: '#000000' }));
-        score_box.add(time_display = this.add.text(-40, -250, ':: ' + game_time_display + ' ::', { font: '32px Bernard', fill: '#000000' }));
+        // score_box.add(this.add.text(-230, -230, "_____________________________", { font: '32px Bernard', fill: '#000000' }));
 
-        score_box.add(this.add.text(-230, -230, "_____________________________", { font: '32px Bernard', fill: '#000000' }));
+        // score_box.add(this.add.text(-30, -150, 'Score', { font: '32px Bernard', fill: '#000000' }));
+        // score_box.add(score_display = this.add.text(-55, -100, '||     ' + game_score_display + '     ||', { font: '32px Bernard', fill: '#000000' }));
 
-        score_box.add(this.add.text(-30, -150, 'Score', { font: '32px Bernard', fill: '#000000' }));
-        score_box.add(score_display = this.add.text(-55, -100, '||     ' + game_score_display + '     ||', { font: '32px Bernard', fill: '#000000' }));
+        // score_box.add(this.add.text(-230, -70, "_____________________________", { font: '32px Bernard', fill: '#000000' }));
 
-        score_box.add(this.add.text(-230, -70, "_____________________________", { font: '32px Bernard', fill: '#000000' }));
+        // score_box.add(this.add.text(-30, 0, 'Mode', { font: '32px Bernard', fill: '#000000' }));
+        // score_box.add(this.add.text(-70, 50, ':: ' + game_mode_display + ' ::', { font: '32px Bernard', fill: '#000000' }));
 
-        score_box.add(this.add.text(-30, 0, 'Mode', { font: '32px Bernard', fill: '#000000' }));
-        score_box.add(this.add.text(-70, 50, ':: ' + game_mode_display + ' ::', { font: '32px Bernard', fill: '#000000' }));
+        // score_box.add(this.add.text(-230, 80, "_____________________________", { font: '32px Bernard', fill: '#000000' }));
 
-        score_box.add(this.add.text(-230, 80, "_____________________________", { font: '32px Bernard', fill: '#000000' }));
+        // score_box.add(this.add.text(-30, 150, 'Speed', { font: '32px Bernard', fill: '#000000' }));
+        // score_box.add(speed_display = this.add.text(-60, 200, game_speed_display, { font: '32px Bernard', fill: '#000000' }));
 
-        score_box.add(this.add.text(-30, 150, 'Speed', { font: '32px Bernard', fill: '#000000' }));
-        score_box.add(speed_display = this.add.text(-60, 200, game_speed_display, { font: '32px Bernard', fill: '#000000' }));
+        /*------------------------------------------------------------------------------------------------------------------------------------------
 
-        debugText = this.add.text(0, 400, 'testing', { font: '32px Bernard', fill: '#000000' });
 
-        // Create keybindings
+                    <<Created keybindings for directional input, as well as 3 debug buttons
+
+
+*/
         left = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
         right = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         up = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
         down = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
-        remove = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
+        bugQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
         bugE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
         bugR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
         swap = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         speedUpBtn = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.U);
-        // ------------------------------
+        /*------------------------------------------------------------------------------------------------------------------------------------------
 
+
+                    <<Created both cursor objects
+
+
+*/
         // Create Cursor
         boxCursor = this.add.sprite(0, 0, 'cursor');
         boxCursor.setName('BoxCursor');
@@ -364,159 +365,118 @@ class MultiplayerGameScene extends Phaser.Scene {
         boxCursor.setScale(1.1);
         //------------------------------
 
-        // Create Cursor
+        // Create Cursor2
         boxCursor2 = this.add.sprite(0, 0, 'cursor2');
         boxCursor2.setName('BoxCursor2');
         red_main_container.add(boxCursor2);
         boxCursor2.setPosition(1600, 755);
         boxCursor2.setScale(1.1);
-
-        // Create array of all current blocks for testing
-        //---------------------------------------------
-        // block_container.children.iterate(function(element){
-        // 	element.setInteractive();
-        // })
-
-        red_block_container.getAll().forEach(element => {
-            element.name += '_2';
-        });
-
-        /*
-                                      ___      .______    __      ____    ____
-                                     /   \     |   _  \  |  |     \   \  /   /
-                                    /  ^  \    |  |_)  | |  |      \   \/   /
-                                   /  /_\  \   |   _  <  |  |       \_    _/
-                                  /  _____  \  |  |_)  | |  `----.    |  |
-                                 /__/     \__\ |______/  |_______|    |__|
-        */
-
-        //PhaserGUIAction(this);
+        //-----------------------------------------------------------------------------------------------------------------------------------------
     }
 
     update(time, delta) {
-        // update text
-        let deltaTime = (0.001 * delta);
-        let fixedTime = deltaTime;
-        timer_seconds += (fixedTime);
-
-        if (timer_seconds.toFixed(2) == 60) {
-            timer_seconds = 0;
-            timer_min += 1;
-
-            if (timer_min.toFixed(2) == 60) {
-                timer_seconds = 0;
-                timer_min = 0;
-                timer_hours += 1;
-            }
-        } else if (timer_seconds.toFixed(2) % 5 == 0) {
-            block_containerSpeed += 0.001;
-
-            game_speed += 0.0001
-            speed_display.setText("<< " + game_speed + " >>");
-        }
-        time_display.setText(timer_hours + ":0" + timer_min + ":" + timer_seconds.toFixed(1));
+        /*------------------------------------------------------------------------------------------------------------------------------------------
 
 
+                    <<Update timer to keep time, MIGHT REMOVE
 
 
-        this.adjustLevel();
-        // ------------
+*/
+        // let deltaTime = (0.001 * delta);
+        // let fixedTime = deltaTime;
+        // timer_seconds += (fixedTime);
+
+        // if (timer_seconds.toFixed(2) == 60) {
+        //     timer_seconds = 0;
+        //     timer_min += 1;
+
+        //     if (timer_min.toFixed(2) == 60) {
+        //         timer_seconds = 0;
+        //         timer_min = 0;
+        //         timer_hours += 1;
+        //     }
+        // } else if (timer_seconds.toFixed(2) % 5 == 0) {
+        //     block_containerSpeed += 0.001;
+
+        //     game_speed += 0.0001
+        //     speed_display.setText("<< " + game_speed + " >>");
+        // }
+        // time_display.setText(timer_hours + ":0" + timer_min + ":" + timer_seconds.toFixed(1));
 
 
+        /*------------------------------------------------------------------------------------------------------------------------------------------
+
+
+                    <<Update Your cursor position, and the tracking for cursor2. get blocks that both cursors hover over.
+
+
+*/
         boxcursorRect = boxCursor.getBounds();
-        // check for match
-        // remove
-        // raise
-        cursorXYText = block_container.getByName('BoxCursor') + ": x:" + boxcursorRect.x + "| y: " + boxcursorRect.y;
 
-        // HOVERED BLOCK INFORMATION _____________________________________________________
         primaryBlock = block_container.getAt(this.indexForPosition(primaryBlockIndex[1], primaryBlockIndex[0]));
-        secondaryBlock = block_container.getAt(this.indexForPosition((primaryBlockIndex[1] + 1), primaryBlockIndex[0]));
-        //primaryBlockName = "Block" + primaryBlockIndex[0] + "-" + primaryBlockIndex[1];
-        //secondaryBlockIndex = [primaryBlockIndex[0], primaryBlockIndex[1] + 1];
-        //primaryBlock = block_container.getByName(primaryBlockName);
+
+        secondaryBlock = block_container.getAt(this.indexForPosition((primaryBlockIndex[1] + 60), primaryBlockIndex[0]));
 
 
-        //secondaryBlockName = "Block" + secondaryBlockIndex[0] + "-" + secondaryBlockIndex[1];
 
-
-        // -=--------------------------------------------------------------------------
-
-        // primaryBlockName_2p = "Block" + primaryBlockIndex_2p[0] + "-" + primaryBlockIndex_2p[1];
-        // secondaryBlockIndex_2p = [primaryBlockIndex_2p[0], primaryBlockIndex_2p[1] + 1];
         primaryBlock_2p = red_block_container.getAt(this.indexForPosition(primaryBlockIndex_2p[1], primaryBlockIndex_2p[0]));
-        secondaryBlock_2p = red_block_container.getAt(this.indexForPosition((primaryBlockIndex_2p[1] + 1), primaryBlockIndex_2p[0]));
 
-        // secondaryBlockName_2p = "Block" + secondaryBlockIndex_2p[0] + "-" + secondaryBlockIndex_2p[1] + "_2";
-        // secondaryBlock_2p = red_block_container.getByName(secondaryBlockName_2p);
+        secondaryBlock_2p = red_block_container.getAt(this.indexForPosition((primaryBlockIndex_2p[1] + 60), primaryBlockIndex_2p[0]));
 
 
-        // _______________________________________________________________________________
+        /*------------------------------------------------------------------------------------------------------------------------------------------
 
-        // Update and listen for directional cursor movement
+
+                    <<Update cursor based on directional input
+
+
+*/
         if (Phaser.Input.Keyboard.JustDown(left) && boxcursorRect.x > 248) {
-            //boxCursor.x -= 60;
-            console.log('shiftFocus boxCursor, left')
             this.shiftFocus('left', boxCursor);
-            console.log('player-keypress PUBLISH left')
             this.currentMatch.publish('player-keypress', { user: this.user, key: 'left' });
 
-
-
         } else if (Phaser.Input.Keyboard.JustDown(right) && boxcursorRect.x < 600) {
-            //boxCursor.x += 60;
             this.shiftFocus('right', boxCursor);
             this.currentMatch.publish('player-keypress', { user: this.user, key: 'right' });
-
         }
 
         if (Phaser.Input.Keyboard.JustDown(up) && boxcursorRect.y > 65) {
-            //boxCursor.y -= 60;
             this.shiftFocus('up', boxCursor);
             this.currentMatch.publish('player-keypress', { user: this.user, key: 'up' });
 
-
         } else if (Phaser.Input.Keyboard.JustDown(down) && boxcursorRect.y < 842) {
-            //boxCursor.y += 60;
             this.shiftFocus('down', boxCursor);
             this.currentMatch.publish('player-keypress', { user: this.user, key: 'down' });
+        }
 
+        if (Phaser.Input.Keyboard.JustDown(swap) && (primaryBlock && secondaryBlock && !primaryBlock.getData('matched') && !secondaryBlock.getData('matched'))) {
+
+            console.log('pressed space')
+            this.swapColors(primaryBlock, secondaryBlock);
+            this.currentMatch.publish('player-keypress', { user: this.user, key: 'space', primary: primaryBlock_2p, secondary: secondaryBlock_2p });
+
+
+        }
+
+        if (Phaser.Input.Keyboard.JustDown(speedUpBtn)) {
+            //
         }
 
         if (boxcursorRect.y < 65) {
             boxCursor.y += 60;
             this.shiftFocus('down', boxCursor);
+            this.currentMatch.publish('player-keypress', { user: this.user, key: 'down' });
         }
 
-        if (Phaser.Input.Keyboard.JustDown(swap)) {
-            // block_container.remove(primaryBlock);
-            console.log(primaryBlock)
-            if (primaryBlock == null || secondaryBlock == null) {
-                // console.log(block_container.getAt("ifp:"+this.indexForPosition(primaryBlockIndex[0], primaryBlockIndex[1])));
-                // console.log(this.indexForPosition(primaryBlockIndex[0], primaryBlockIndex[1]));
-            } else {
-                // console.log(primaryBlock_2p.texture.key)
+/*------------------------------------------------------------------------------------------------------------------------------------------
 
 
-                this.swapColors(primaryBlock, secondaryBlock);
-            }
-            this.currentMatch.publish('player-keypress', { user: this.user, key: 'space', primary: primaryBlock_2p, secondary: secondaryBlock_2p });
+                    <<Debug input. Debug Q will set hovered blocks' textures to null
 
 
+*/
 
-        }
-        if (Phaser.Input.Keyboard.JustDown(speedUpBtn)) {
-            // block_container.remove(primaryBlock);
-            //block_containerSpeed += 0.05;
-            // console.log(boxcursorRect.x);
-            // console.log(boxcursorRect.y);
-
-
-        }
-
-        // ________    SWAP BLOCKS _________
-
-        if (Phaser.Input.Keyboard.JustDown(remove)) {
+        if (Phaser.Input.Keyboard.JustDown(bugQ)) {
             if (primaryBlock == undefined || secondaryBlock == undefined) {
                 console.log('working:')
                 for (let index = 0; index < 8; index++) {
@@ -531,10 +491,6 @@ class MultiplayerGameScene extends Phaser.Scene {
                 secondaryBlock.setTexture('null_block');
                 secondaryBlock.setData('color', 'null_block');
             }
-
-
-
-
         }
 
         if (Phaser.Input.Keyboard.JustDown(bugR)) {
@@ -548,11 +504,13 @@ class MultiplayerGameScene extends Phaser.Scene {
         }
 
 
-        //------------------------------------------------------------
+        /*------------------------------------------------------------------------------------------------------------------------------------------
 
 
+                    <<Speed control, determining rising of containers.
 
-        // SPEED CONTROL
+
+*/
         block_acceleration += (block_containerSpeed * delta);
 
         main_container.y = (0 - block_acceleration);
@@ -561,294 +519,89 @@ class MultiplayerGameScene extends Phaser.Scene {
 
         if (block_container.getBounds().y <= 68) {
 
-            this.scene.start('gameoverScene', { score: this.score_display, win: true, user: this.user });
+            this.scene.start('gameoverScene', { win: true, user: this.user });
         }
 
         if (red_block_container.getBounds().y <= 68) {
-            this.scene.start('gameoverScene', { score: this.score_display, win: false, user: this.user });
+            this.scene.start('gameoverScene', { win: false, user: this.user });
         }
-
-        // if ((block_container.getAt((main_container_blockLevel * 8) - 1).getBounds().y) > 880){
-
-        // }
+/*------------------------------------------------------------------------------------------------------------------------------------------
 
 
+                    <<Methods for your grid management.
 
 
-        // ----------------------------------------------------------------------------------------------------
-/*
-          ______  __    __   _______   ______  __  ___
-         /      ||  |  |  | |   ____| /      ||  |/  /
-        |  ,----'|  |__|  | |  |__   |  ,----'|  '  /
-        |  |     |   __   | |   __|  |  |     |    <
-        |  `----.|  |  |  | |  |____ |  `----.|  .  \
-         \______||__|  |__| |_______| \______||__|\__\
-
-        .___  ___.      ___   .___________.  ______  __    __   _______     _______.
-        |   \/   |     /   \  |           | /      ||  |  |  | |   ____|   /       |
-        |  \  /  |    /  ^  \ `---|  |----`|  ,----'|  |__|  | |  |__     |   (----`
-        |  |\/|  |   /  /_\  \    |  |     |  |     |   __   | |   __|     \   \
-        |  |  |  |  /  _____  \   |  |     |  `----.|  |  |  | |  |____.----)   |
-        |__|  |__| /__/     \__\  |__|      \______||__|  |__| |_______|_______/
-
-
-        */
-
+*/
         this.eliminateRow();
-
-        this.matchof4Vert(block_container);
-        this.matchof4Vert(red_block_container);
-
-        this.matchOf3Vert(block_container);
-        this.matchOf3Vert(red_block_container);
-
-        this.matchof4Hori(block_container);
-        this.matchof4Hori(red_block_container);
-
-        this.matchOf3Hori(block_container);
-        this.matchOf3Hori(red_block_container);
         this.activateBlocks();
-
-
-        this.bubbleUpNull(red_visible_blocks);
-        this.bubbleUpNull(blue_visible_blocks);
-        score_display.setText(game_score_display);
-
-        this.updateBlue();
-        this.updateRed();
-
-
-        debugText.setText([
-            ""
-        ])
-
-
+        this.updateGrid(blue_visible_blocks, block_container);
+        this.updateGrid(red_visible_blocks, red_block_container);
+        //score_display.setText(game_score_display);
         //---------------------------------------------
 
     }
 
-    updateBlue(){
+    updateGrid(visible_blocks, updated_container) {
+        let block_array = visible_blocks.getChildren();
+        const matchesSet = new Set(); // create a set of matches
+        for (const block of block_array) { // for every visible block
+            const { x, y } = block; // extract it's x and y
+            const blockIndex = updated_container.getIndex(block); // get it's index
 
-    }
 
-    updateRed(){
+            if (blockIndex === -1) continue;
+            if (block.getData('matched') || block.getData('color') === 'null_block' || block.texture.key === 'null_block') continue;
+            // stop searching if the block is invalid in the first place.
+            let searchBox = [];
+            let searchBoxHori = [];
 
+            if ((block_array.length - blockIndex) >= 16) { // exclude bottom two rows
+                searchBox = [ // create array of 3 vertical blocks, filter to make sure all blocks are valid
+                    updated_container.getAt(blockIndex),
+                    updated_container.getAt(this.indexForPosition(x, y + 60)),
+                    updated_container.getAt(this.indexForPosition(x, y + 120)),
+                ].filter(b => b);
+            }
+            if (x <= 300) {
+                searchBoxHori = [// exclude right two columns
+                    updated_container.getAt(blockIndex),
+                    updated_container.getAt(this.indexForPosition(x + 60, y)),
+                    updated_container.getAt(this.indexForPosition(x + 120, y)),
+                ].filter(b => b);
+            }
+            const textures = searchBox.map(b => b.texture.key);
+            const texturesHori = searchBoxHori.map(b => b.texture.key);
+            if (textures.every(t => t === textures[0])) searchBox.forEach(block => matchesSet.add(block));
+            if (texturesHori.every(t => t === texturesHori[0])) searchBoxHori.forEach(block => matchesSet.add(block));
+        }
+        matchesSet.forEach(block => {
+            block.setData('matched', true);
+            if (matchesSet.size > 0) {
+                console.log(matchesSet)
+            }
+            block.spinToDisappear();
+            //game_score_display += 50;
+        });
+
+        this.bubbleUpNull(visible_blocks, updated_container);
     }
 
     end() {
 
     }
 
-    bubbleUpNull(visible_blocks) {
-
-        let nullArray = [];
-        // an array with keys 0-420 to represent each column
-
-        let columnArray = {};
-        // Initialize columnArray with keys for each column
-        for (let i = 0; i <= 420; i += 60) {
-            columnArray[i.toString()] = [];
-        }
-        // Iterate over blue_visible_blocks to find null blocks
-        visible_blocks.getChildren().forEach(function (block) {
-            if (block.x.toString() in columnArray) {
-                columnArray[block.x.toString()].push(block);
+    bubbleUpNull(visible_blocks, container) {
+        for (let i = 0; i < visible_blocks.getChildren().length; i++) {
+            let block = container.getAt(i);
+            let block_below = container.getAt(this.indexForPosition(block.x, (block.y + 60)))
+            if (block_below === undefined || block_below === null) {
+                continue;
             }
-
-        });
-
-        //iterate through the new compiled dictionary of columns to determin the correct colors, and set the textures accordingly
-        for (let key in columnArray) {
-            let arrayOfNullsInColumn = [];
-            let newColors = [];
-
-            let myArray = columnArray[key];
-            for (let block of myArray) {
-
-                let color = block.texture.key;
-                if (color === "null_block") {
-                    arrayOfNullsInColumn.push(block);
-                } else {
-                    newColors.push(block.texture.key);
-                }
+            if (block_below.getData('color') === "null_block" && (block.getData('matched') == false && block_below.getData('matched') == false)) {
+                this.swapColors(block, block_below);
             }
-            for (let nullblock of arrayOfNullsInColumn) {
-
-                newColors.unshift(nullblock.texture.key);
-            }
-            for (let index = 0; index < newColors.length; index++) {
-
-                columnArray[key][index].setTexture(newColors[index]);
-
-                columnArray[key][index].setData('color', newColors[index]);
-
-            }
-
         }
     }
-
-    matchof3Vert_new(){
-
-    }
-
-    matchOf3Vert(container) {
-
-
-        try {
-            for (let row = 0; row < numRows - 2; row++) {
-                for (let column = 0; column < 8; column++) {
-
-                    let top = (8 * row) + column
-                    let mid = (8 * (row + 1)) + column
-                    let bot = (8 * (row + 2)) + column
-
-                    let block1 = container.getAt(top);
-                    let block2 = container.getAt(mid);
-                    let block3 = container.getAt(bot);
-
-                    let color = block1.getData('color');
-
-                    if ((block1 != null && block2 != null && block3 != null) && (block1.getData('color') == color && block2.getData('color') == color && block3.getData('color') == color) && color != 'null_block' && block1.getData('matched') == false && block2.getData('matched') == false && block3.getData('matched') == false) {
-
-                        block1.setData('matched', true);
-                        block2.setData('matched', true);
-                        block3.setData('matched', true);
-
-                        block1.spinToDisappear();
-                        block2.spinToDisappear();
-                        block3.spinToDisappear();
-
-                        // reward points.
-                        game_score_display += 150;
-
-                    }
-                }
-            }
-        } catch (error) {
-            return
-        }
-    }
-    matchOf3Hori(container) {
-
-        try {
-            for (let row = 0; row < numRows - 1; row++) {
-                for (let column = 0; column < 6; column++) {
-
-                    let start = (8 * row) + column
-                    let mid = (8 * row) + column + 1
-                    let end = (8 * row) + column + 2
-
-                    let block1 = container.getAt(start);
-                    let block2 = container.getAt(mid);
-                    let block3 = container.getAt(end);
-
-                    let color = block1.getData('color');
-
-                    if ((block1.getData('color') == color && block2.getData('color') == color && block3.getData('color') == color) && color != 'null_block' && block1.getData('matched') == false && block2.getData('matched') == false && block3.getData('matched') == false) {
-                        // block1.setData('color', 'null_block');
-                        // block2.setData('color', 'null_block');
-                        // block3.setData('color', 'null_block');
-
-                        block1.spinToDisappear();
-                        block2.spinToDisappear();
-                        block3.spinToDisappear();
-
-
-                        // block1.setTexture('null_block');
-                        // block2.setTexture('null_block');
-                        // block3.setTexture('null_block');
-
-                        //this.setAlphaOnBlock(block1, block2, block3);
-                        // reward points.
-                        game_score_display += 150;
-                    }
-                }
-            }
-        } catch (error) {
-            return
-        }
-    }
-
-    matchof4Vert(container) {
-        try {
-            for (let row = 0; row < numRows - 2; row++) {
-                for (let column = 0; column < 8; column++) {
-
-                    let top = (8 * row) + column
-                    let mid1 = (8 * (row + 1)) + column
-                    let mid2 = (8 * (row + 2)) + column
-                    let bot = (8 * (row + 3)) + column
-
-                    let block1 = container.getAt(top);
-                    let block2 = container.getAt(mid1);
-                    let block3 = container.getAt(mid2);
-                    let block4 = container.getAt(bot);
-
-                    let color = block1.getData('color');
-
-                    if ((block1 != null && block2 != null && block3 != null && block4 != null) && (block1.getData('color') == color && block2.getData('color') == color && block3.getData('color') == color && block4.getData('color')) == color && color != 'null_block' && block1.getData('matched') == false && block2.getData('matched') == false && block3.getData('matched') == false && block4.getData('matched') == false) {
-
-                        block1.spinToDisappear();
-                        block2.spinToDisappear();
-                        block3.spinToDisappear();
-
-                        block4.setData('color', 'bomb_block');
-                        block4.setTexture('bomb_block');
-
-
-                        //this.setAlphaOnBlock(block1, block2, block3);
-                        // reward points.
-                        game_score_display += 300;
-                    }
-                }
-            }
-        } catch (error) {
-            return
-        }
-    }
-    matchof4Hori(container) {
-        try {
-            for (let row = 0; row < numRows - 1; row++) {
-                for (let column = 0; column < 5; column++) {
-
-                    let start = (8 * row) + column
-                    let mid1 = (8 * row) + column + 1
-                    let mid2 = (8 * row) + column + 2
-                    let end = (8 * row) + column + 3
-
-                    let block1 = container.getAt(start);
-                    let block2 = container.getAt(mid1);
-                    let block3 = container.getAt(mid2);
-                    let block4 = container.getAt(end);
-
-                    let color = block1.getData('color');
-
-                    if ((block1.getData('color') == color && block2.getData('color') == color && block3.getData('color') == color && block3.getData('color') == color && block4.getData('color') == color) && color != 'null_block') {
-                        block1.setData('color', 'null_block');
-                        block2.setData('color', 'null_block');
-                        block3.setData('color', 'null_block');
-                        block4.setData('color', 'bomb_block');
-
-                        block1.setTexture('null_block');
-                        block2.setTexture('null_block');
-                        block3.setTexture('null_block');
-                        block4.setTexture('bomb_block');
-
-                        //this.setAlphaOnBlock(block1, block2, block3);
-                        // reward points.
-                        game_score_display += 300;
-                    }
-                }
-            }
-        } catch (error) {
-            return
-        }
-    }
-
-    bombExplosion() {
-
-    }
-
     activateBlocks() {
         red_block_container.each(sprite => {
             if (sprite.getBounds().y < 880) {
@@ -871,14 +624,14 @@ class MultiplayerGameScene extends Phaser.Scene {
 
             block_container.removeBetween(0, 8, true);
             this.addRow(block_container);
-            primaryBlockIndex[0] -= 1;
+            primaryBlockIndex[0] -= 60;
             //main_container.y -= 60;
         }
         if (this.checkFirstRowEliminated(red_block_container)) {
 
             red_block_container.removeBetween(0, 8, true);
             this.addRow(red_block_container);
-            primaryBlockIndex_2p[0] -= 1;
+            primaryBlockIndex_2p[0] -= 60;
             //red_main_container.y -= 60;
         }
 
@@ -904,16 +657,22 @@ class MultiplayerGameScene extends Phaser.Scene {
     }
 
     swapColors(block1, block2) {
-        const color1 = block1.getData('color');
-        const color2 = block2.getData('color');
+        const color1 = block1.texture.key;
+        const color2 = block2.texture.key;
 
+        if (block1 == null || block2 == null) {
+            return;
+        }
 
         if (color1 !== color2) {
+
             block1.setTexture(color2);
             block2.setTexture(color1);
 
             block1.setData('color', color2);
             block2.setData('color', color1);
+        } else {
+
         }
     }
 
@@ -925,19 +684,19 @@ class MultiplayerGameScene extends Phaser.Scene {
                 case 'left':
                     console.log('cursor1 moves left');
                     boxCursor.x -= 60;
-                    primaryBlockIndex[1] -= 1;
+                    primaryBlockIndex[1] -= 60;
                     break;
                 case 'right':
                     boxCursor.x += 60;
-                    primaryBlockIndex[1] += 1;
+                    primaryBlockIndex[1] += 60;
                     break;
                 case 'up':
                     boxCursor.y -= 60;
-                    primaryBlockIndex[0] -= 1;
+                    primaryBlockIndex[0] -= 60;
                     break;
                 case 'down':
                     boxCursor.y += 60;
-                    primaryBlockIndex[0] += 1;
+                    primaryBlockIndex[0] += 60;
                     break;
             }
         } else {
@@ -945,43 +704,25 @@ class MultiplayerGameScene extends Phaser.Scene {
                 case 'left':
                     console.log('cursor2 moves left');
                     boxCursor2.x -= 60;
-                    primaryBlockIndex_2p[1] -= 1;
+                    primaryBlockIndex_2p[1] -= 60;
                     break;
                 case 'right':
                     boxCursor2.x += 60;
-                    primaryBlockIndex_2p[1] += 1;
+                    primaryBlockIndex_2p[1] += 60;
                     break;
                 case 'up':
                     boxCursor2.y -= 60;
-                    primaryBlockIndex_2p[0] -= 1;
+                    primaryBlockIndex_2p[0] -= 60;
                     break;
                 case 'down':
                     boxCursor2.y += 60;
-                    primaryBlockIndex_2p[0] += 1;
+                    primaryBlockIndex_2p[0] += 60;
                     break;
             }
         }
     }
 
-    incrementIndex() {
 
-        if (primaryBlockIndex[1] != 7) {
-            primaryBlockIndex[1] += 1;
-        } else {
-            primaryBlockIndex[1] = 0;
-            primaryBlockIndex[0] += 1;
-        }
-    }
-
-    decrementIndex() {
-
-        if (primaryBlockIndex[1] != 0) {
-            primaryBlockIndex[1] -= 1;
-        } else {
-            primaryBlockIndex[1] = 7;
-            primaryBlockIndex[0] -= 1;
-        }
-    }
 
     shuffle(array, rng) {
 
@@ -1015,13 +756,12 @@ class MultiplayerGameScene extends Phaser.Scene {
 
             for (let index = 0; index < 8; index++) {
                 const baseBlock = new BaseBlock(this, index * 60, increment, blockPool[index]);
-                baseBlock.setData({ color: blockPool[index], x: nameIncrement, y: index, matched: false });
-                //baseBlock.setName('Block' + (nameIncrement) + "-" + index);
+                baseBlock.setData({ color: blockPool[index], matched: false });
                 baseBlock.setTint(0x808080);
                 results.push(baseBlock);
             }
 
-            nameIncrement += 1;
+            rowIncrement += 1;
             return results;
 
 
@@ -1042,13 +782,13 @@ class MultiplayerGameScene extends Phaser.Scene {
 
             for (let index = 0; index < 8; index++) {
                 const baseBlock = new BaseBlock(this, index * 60, increment, blockPool[index]);
-                baseBlock.setData({ color: blockPool[index], x: nameIncrement, y: index, matched: false });
-                //baseBlock.setName('Block' + (nameIncrement) + "-" + index);
+                baseBlock.setData({ color: blockPool[index], x: rowIncrement, y: index, matched: false });
+                //baseBlock.setName('Block' + (rowIncrement) + "-" + index);
                 baseBlock.setTint(0x808080);
                 results.push(baseBlock);
             }
 
-            nameIncrement += 1;
+            rowIncrement += 1;
             return results;
         }
 
@@ -1080,48 +820,11 @@ class MultiplayerGameScene extends Phaser.Scene {
             container.add(row);
             lineRow += 1;
         }
-
-
-    }
-
-    setAlphaOnBlock(block1, block2, block3) {
-
-        if (block1.alpha == 0) {
-            block1.setAlpha(1);
-        } else {
-            block1.setAlpha(0);
-        }
-
-        if (block2.alpha == 0) {
-            block2.setAlpha(1);
-        } else {
-            block2.setAlpha(0);
-        }
-
-        if (block3.alpha == 0 && block3 != null) {
-            block3.setAlpha(1);
-        } else {
-            block3.setAlpha(0);
-        }
-
-
-    }
-
-    adjustLevel() {
-        let containerHeight = main_container.getBounds().y;
-        switch (containerHeight) {
-            case containerHeight < 10:
-
-                break;
-
-            default:
-                break;
-        }
     }
 
     indexForPosition(x, y) {
-        x = x;
-        y = y;
+        x = x/60;
+        y = y/60;
         //console.log('x'+x+'|y: '+ y)
         return (y * 8 + x);
     }

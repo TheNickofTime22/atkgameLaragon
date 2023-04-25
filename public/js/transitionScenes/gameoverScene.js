@@ -40,7 +40,6 @@ class GameoverScene extends Phaser.Scene {
 
     renderGameoverScreen(isUserLoggedIn) {
         this.add.text(this.width, 150, 'Game Over', { font: '132px Bernard', fill: '#FFFFFF' });
-
         if (isUserLoggedIn) {
             const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             const xhr = new XMLHttpRequest();
