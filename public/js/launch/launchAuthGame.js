@@ -12,11 +12,7 @@ xhr.setRequestHeader("Content-Type", "application/json");
 xhr.onload = () => {
     if (xhr.status === 200) {
         const user = JSON.parse(xhr.response);
-        var ably = new Ably.Realtime({
-            key: 'Jn3neg.6ORxrw:51njAEu0j3jTkoTwascniu_bvpsIMQOpjfmbtyijZWA',
-            clientId: user.id + user.name,
-            // screenname: user.screenname
-        });
+
         console.log(user);
         const config = {
             type: Phaser.AUTO,
@@ -27,7 +23,8 @@ xhr.onload = () => {
                 mode: Phaser.Scale.FIT,
             },
             user: user,
-            ably: ably,
+            fps: 10
+
         };
         // Create the game with the config
         const game = new Phaser.Game(config);

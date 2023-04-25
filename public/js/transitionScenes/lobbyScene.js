@@ -5,7 +5,11 @@ export default class LobbyScene extends Phaser.Scene {
     constructor(config) {
         super({ key: 'lobbyScene' });
         this.user = config.user;
-        this.ably = config.ably;
+        this.ably = new Ably.Realtime({
+            key: 'Jn3neg.6ORxrw:51njAEu0j3jTkoTwascniu_bvpsIMQOpjfmbtyijZWA',
+            clientId: this.user.id + this.user.name,
+            // screenname: user.screenname
+        });
         this.controllerChannel = this.ably.channels.get('configChannel');
     }
 
@@ -21,7 +25,7 @@ export default class LobbyScene extends Phaser.Scene {
             console.log("YOU DID IT "+ message.data.user.screenname +", STARTING THE GAME!!!");
             this.add.bitmapText(300, 450, 'smooth', 'Connecting to game...');
 
-            this.scene.start('multiplayerGameScene', {user: this.user, channelName: message.data.channelName, rngSeed: message.data.rngSeed})
+            this.scene.start('multiplayerGameScene', {user: this.user, channelName: message.data.channelName, rngSeed: message.data.rngSeed, ably:this.ably})
         });
     }
 

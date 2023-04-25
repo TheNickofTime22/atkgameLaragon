@@ -85,23 +85,25 @@ let red_RNG;
 let blue_RNG;
 let blue_visible_blocks;
 let red_visible_blocks;
-
+let columnArray;
 class MultiplayerGameScene extends Phaser.Scene {
 
 
 
     constructor(config) {
         super({ key: 'multiplayerGameScene' });
-        this.ably = config.ably;
+
         this.user = config.user;
         console.log('constructor has run')
 
     }
 
     init(data) {
+        this.ably = data.ably;
         this.user = data.user;
         this.rngSeed = data.rngSeed;
         this.currentMatch = this.ably.channels.get(data.channelName);
+
         console.log('currentMatch is made with channelname')
         block_containerRiseSpeed = 0.000005;
         nameIncrement = 0;
@@ -167,6 +169,8 @@ class MultiplayerGameScene extends Phaser.Scene {
 
         blue_visible_blocks;
         red_visible_blocks;
+
+        columnArray = {};
     };
 
     preload() {
@@ -610,22 +614,10 @@ class MultiplayerGameScene extends Phaser.Scene {
             this.bubbleUpNull(red_visible_blocks);
             this.bubbleUpNull(blue_visible_blocks);
             score_display.setText(game_score_display);
+
+            this.updateBlue();
+            this.updateRed();
         }
-        // if (delay == 100){
-
-        // 	//this.eliminateRow();
-
-        // 	delay = 0;
-        // } else if (delay == 50) {
-
-        // 	delay += 2;
-        // } else {
-        // 	delay += 2;
-        // }
-        // ---------------
-
-
-
 
         // Update Debug information
 
@@ -644,6 +636,14 @@ class MultiplayerGameScene extends Phaser.Scene {
 
     }
 
+    updateBlue(){
+
+    }
+
+    updateRed(){
+
+    }
+
     end() {
 
     }
@@ -652,8 +652,8 @@ class MultiplayerGameScene extends Phaser.Scene {
 
         let nullArray = [];
         // an array with keys 0-420 to represent each column
-        let columnArray = {};
 
+        let columnArray = {};
         // Initialize columnArray with keys for each column
         for (let i = 0; i <= 420; i += 60) {
             columnArray[i.toString()] = [];
@@ -696,7 +696,12 @@ class MultiplayerGameScene extends Phaser.Scene {
         }
     }
 
+    matchof3Vert_new(){
+
+    }
+
     matchOf3Vert(container) {
+
 
         try {
             for (let row = 0; row < numRows - 2; row++) {

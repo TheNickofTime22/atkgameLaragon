@@ -93,7 +93,7 @@ class SingleplayerGameScene extends Phaser.Scene {
         checkStart = 0;
         timer_hours = 0;
         timer_min = this.timer ? 0 : 0;
-        timer_seconds = this.timer ? 30 : 0;
+        timer_seconds = this.timer ? 120 : 0;
         game_score_display = 0;
         score_display = null;
         game_mode_display = data.timer ? "Time Trial" : "Endless";
@@ -101,7 +101,7 @@ class SingleplayerGameScene extends Phaser.Scene {
         main_container = null;
         lineRow = numRows;
 
-        rngSeedInt = 'bananna';
+        rngSeedInt = 'boo';
         blue_visible_blocks;
     }
 
@@ -170,19 +170,19 @@ class SingleplayerGameScene extends Phaser.Scene {
         this.add.text(710, -20, '_______________', { font: '92px Bernard', fill: '#000000' });
 
         block_container.each(sprite => {
-            if (sprite.getBounds().y < 780) {
+            if (sprite.getBounds().y < 850) {
                 blue_visible_blocks.add(sprite);
                 sprite.setAlpha(1);
             }
         });
 
-        block_container.on('childMoved', (child) => {
-            if (child.getBounds().y < 780) {
-                console.log("blue Listened...")
-                blue_visible_blocks.add(child);
-                child.setAlpha(1);
-            }
-        });
+        // block_container.on('childMoved', (child) => {
+        //     if (child.getBounds().y < 780) {
+        //         console.log("blue Listened...")
+        //         blue_visible_blocks.add(child);
+        //         child.setAlpha(1);
+        //     }
+        // });
 
         this.activateBlocks();
 
@@ -305,33 +305,33 @@ class SingleplayerGameScene extends Phaser.Scene {
         if (Phaser.Input.Keyboard.JustDown(left) && boxcursorRect.x > 726) {
             boxCursor.x -= 60;
             this.shiftFocus('left');
-            this.bubbleUpNull();
+
             //console.log("input--l");
 
         } else if (Phaser.Input.Keyboard.JustDown(right) && boxcursorRect.x < 1080) {
             boxCursor.x += 60;
             this.shiftFocus('right');
-            this.bubbleUpNull();
+
             //console.log("input--r");
         }
 
         if (Phaser.Input.Keyboard.JustDown(up) && boxcursorRect.y > 65) {
             boxCursor.y -= 60;
             this.shiftFocus('up');
-            this.bubbleUpNull();
+
             //console.log("input--u");
 
-        } else if (Phaser.Input.Keyboard.JustDown(down) && boxcursorRect.y < 842) {
+        } else if (Phaser.Input.Keyboard.JustDown(down) && boxcursorRect.y < 790) {
             boxCursor.y += 60;
             this.shiftFocus('down');
-            this.bubbleUpNull();
+
             //console.log("input--d");
         }
 
         if (boxcursorRect.y < 65) {
             boxCursor.y += 60;
             this.shiftFocus('down');
-            this.bubbleUpNull();
+
         }
 
         if (Phaser.Input.Keyboard.JustDown(swap)) {
@@ -390,7 +390,7 @@ class SingleplayerGameScene extends Phaser.Scene {
         }
 
         if (Phaser.Input.Keyboard.JustDown(bugE)) {
-            console.log(primaryBlock.getData('color'), primaryBlock.x, primaryBlock.y);
+            console.log(blue_visible_blocks.getChildren().length);
 
             //console.log(blue_visible_blocks.children);
         }
@@ -441,19 +441,21 @@ class SingleplayerGameScene extends Phaser.Scene {
 
 
                 */
-        if ((time % 60) == 0) {
 
-            this.eliminateRow();
-            this.matchof4Vert();
-            this.matchOf3Vert();
-            this.matchof4Hori();
-            this.matchOf3Hori();
-            this.activateBlocks();
+        this.activateBlocks();
+        this.eliminateRow();
+        this.checkForMatches();
+        //this.matchof4Vert();
+        //this.matchof3Vert_new();
+        //this.matchof4Hori();
+        //this.matchOf3Hori();
 
-            this.eliminateRow();
-            score_display.setText(game_score_display);
-        }
 
+        this.eliminateRow();
+
+        score_display.setText(game_score_display);
+
+        this.bubbleUpNull();
 
 
         //---------------------------------------------
@@ -468,67 +470,77 @@ class SingleplayerGameScene extends Phaser.Scene {
 
         // add any new visible blue blocks to the group
         block_container.each(sprite => {
-            if (sprite.getBounds().y < 880) {
-                blue_visible_blocks.add(sprite);
+            if (sprite.getBounds().y < 850) {
                 sprite.clearTint();
+                blue_visible_blocks.add(sprite);
             }
         });
     }
 
     bubbleUpNull() {
 
-        let nullArray = [];
-        // an array with keys 0-420 to represent each column
-        let columnArray = {};
+        // let nullArray = [];
+        // // an array with keys 0-420 to represent each column
+        // let columnArray = {};
 
-        // Initialize columnArray with keys for each column
-        for (let i = 0; i <= 420; i += 60) {
-            columnArray[i.toString()] = [];
+        // // Initialize columnArray with keys for each column
+        // for (let i = 0; i <= 420; i += 60) {
+        //     columnArray[i.toString()] = [];
+        // }
+        // // Iterate over blue_visible_blocks to find null blocks
+        // blue_visible_blocks.getChildren().forEach(function (block) {
+        //     if (block.x.toString() in columnArray) {
+        //         columnArray[block.x.toString()].push(block);
+        //     }
+        //     // if (block.texture.key === 'null_block') {
+        //     //     nullArray.push(block);
+        //     // }
+        // });
+
+        // //iterate through the new compiled dictionary of columns to determin the correct colors, and set the textures accordingly
+        // for (let key in columnArray) {
+        //     let arrayOfNullsInColumn = [];
+        //     let newColors = [];
+
+        //     let myArray = columnArray[key];
+        //     for (let block of myArray) {
+
+        //         let color = block.texture.key;
+        //         if (color === "null_block") {
+        //             arrayOfNullsInColumn.push(block);
+        //         } else {
+        //             newColors.push(block.texture.key);
+        //         }
+        //     }
+        //     for (let nullblock of arrayOfNullsInColumn) {
+
+        //         newColors.unshift(nullblock.texture.key);
+        //     }
+        //     for (let index = 0; index < newColors.length; index++) {
+        //         // console.log("columnarrayblock:")
+        //         // console.log(columnArray[key][index].texture.key);
+        //         // console.log("newcolor:")
+        //         // console.log(newColors[index]);
+
+
+        //         columnArray[key][index].setTexture(newColors[index]);
+
+        //         columnArray[key][index].setData('color', newColors[index]);
+
+        //     }
+
+        // }
+        // console.log(columnArray);
+        for (let i = 0; i < blue_visible_blocks.getChildren().length; i++) {
+            let block = block_container.getAt(i);
+            let block_below = block_container.getAt(this.indexForPosition(block.x, (block.y + 60)))
+            if (block_below === undefined || block_below === null) {
+                continue;
+            }
+            if (block_below.getData('color') === "null_block" && (block.getData('matched') == false && block_below.getData('matched') == false)) {
+                this.swapColors(block, block_below);
+            }
         }
-        // Iterate over blue_visible_blocks to find null blocks
-        blue_visible_blocks.getChildren().forEach(function (block) {
-            if (block.x.toString() in columnArray) {
-                columnArray[block.x.toString()].push(block);
-            }
-            // if (block.texture.key === 'null_block') {
-            //     nullArray.push(block);
-            // }
-        });
-
-        //iterate through the new compiled dictionary of columns to determin the correct colors, and set the textures accordingly
-        for (let key in columnArray) {
-            let arrayOfNullsInColumn = [];
-            let newColors = [];
-
-            let myArray = columnArray[key];
-            for (let block of myArray) {
-
-                let color = block.texture.key;
-                if (color === "null_block") {
-                    arrayOfNullsInColumn.push(block);
-                } else {
-                    newColors.push(block.texture.key);
-                }
-            }
-            for (let nullblock of arrayOfNullsInColumn) {
-
-                newColors.unshift(nullblock.texture.key);
-            }
-            for (let index = 0; index < newColors.length; index++) {
-                // console.log("columnarrayblock:")
-                // console.log(columnArray[key][index].texture.key);
-                // console.log("newcolor:")
-                // console.log(newColors[index]);
-
-
-                columnArray[key][index].setTexture(newColors[index]);
-
-                columnArray[key][index].setData('color', newColors[index]);
-
-            }
-
-        }
-        console.log(columnArray);
     }
 
     moveNullBlocksToTop(columnArray) {
@@ -563,9 +575,46 @@ class SingleplayerGameScene extends Phaser.Scene {
         }
     }
 
+    checkForMatches(){
+
+    }
+
+    matchof3Vert_new() {
+
+        const blocks = blue_visible_blocks.getChildren();
+
+        for (const block of blocks) {
+            const { x, y } = block;
+            const blockIndex = block_container.getIndex(block);
+            const rowIndex = Math.floor(blockIndex / 8);
+
+            if ((blocks.length - blockIndex) <= 16) { // exclude bottom two rows
+                continue;
+            }
+
+            const searchBox = [
+                block_container.getAt(blockIndex),
+                block_container.getAt(this.indexForPosition(x, y + 60)),
+                block_container.getAt(this.indexForPosition(x, y + 120)),
+            ];
+
+            const textures = searchBox.map(b => b.texture.key);
+            const isMatched = searchBox.every((b, i) => {
+                return b && b.getData('matched') !== true && b.texture.key !== 'null_block' && (i === 0 || searchBox[i - 1]);
+            });
 
 
+            const allSame = textures.every(t => t === textures[0]);
 
+            if (isMatched && allSame) {
+                searchBox.forEach(b => {
+                    b.setData('matched', true);
+                    b.spinToDisappear();
+                    game_score_display += 50;
+                });
+            }
+        }
+    }
 
     matchOf3Vert() {
         for (let row = 0; row < numRows - 2; row++) {
@@ -615,9 +664,9 @@ class SingleplayerGameScene extends Phaser.Scene {
                 let color = block1.getData('color');
 
                 if ((block1.getData('color') == color && block2.getData('color') == color && block3.getData('color') == color) && color != 'null_block' && block1.getData('matched') == false && block2.getData('matched') == false && block3.getData('matched') == false) {
-                    // block1.setData('color', 'null_block');
-                    // block2.setData('color', 'null_block');
-                    // block3.setData('color', 'null_block');
+                    block1.setData('matched', true);
+                    block2.setData('matched', true);
+                    block3.setData('matched', true);
 
                     block1.spinToDisappear();
                     block2.spinToDisappear();
@@ -704,50 +753,7 @@ class SingleplayerGameScene extends Phaser.Scene {
 
     bombExplosion(bomb_block, isLeft) {
 
-        const blocks = [];
 
-        // Add blocks 2 directions up
-
-        // if (y - 2 >= 0) {
-        //     blocks.push(this.grid[y - 2][x]);
-        // }
-
-        // // Add blocks 2 directions down
-        // if (y + 2 < this.grid.length) {
-        //     blocks.push(this.grid[y + 2][x]);
-        // }
-
-        // // Add blocks 2 directions to the left
-        // if (x - 2 >= 0) {
-        //     blocks.push(this.grid[y][x - 2]);
-        // }
-
-        // // Add blocks 2 directions to the right
-        // if (x + 2 < this.grid[0].length) {
-        //     blocks.push(this.grid[y][x + 2]);
-        // }
-
-        // // Add blocks 2 diagonally up-left
-        // if (y - 2 >= 0 && x - 2 >= 0) {
-        //     blocks.push(this.grid[y - 2][x - 2]);
-        // }
-
-        // // Add blocks 2 diagonally up-right
-        // if (y - 2 >= 0 && x + 2 < this.grid[0].length) {
-        //     blocks.push(this.grid[y - 2][x + 2]);
-        // }
-
-        // // Add blocks 2 diagonally down-left
-        // if (y + 2 < this.grid.length && x - 2 >= 0) {
-        //     blocks.push(this.grid[y + 2][x - 2]);
-        // }
-
-        // // Add blocks 2 diagonally down-right
-        // if (y + 2 < this.grid.length && x + 2 < this.grid[0].length) {
-        //     blocks.push(this.grid[y + 2][x + 2]);
-        // }
-
-        //     // return blocks;    }
 
 
     }
@@ -795,22 +801,6 @@ class SingleplayerGameScene extends Phaser.Scene {
 
         if (color1 !== color2) {
 
-            // this.tweens.add({
-            //     targets: leftBlock,
-            //     duration: 100,
-            //     x: destX,
-            //     y: destY,
-            //     onComplete: () => {
-            //         // Swap the positions of the blocks in the container
-            //         const leftIndex = container.getIndex(leftBlock);
-            //         const rightIndex = container.getIndex(rightBlock);
-            //         container.moveDown(leftBlock);
-            //         container.moveDown(rightBlock);
-            //         container.setIndex(leftBlock, rightIndex);
-            //         container.setIndex(rightBlock, leftIndex);
-            //     }
-            // });
-
             block1.setTexture(color2);
             block2.setTexture(color1);
 
@@ -818,7 +808,6 @@ class SingleplayerGameScene extends Phaser.Scene {
             block2.setData('color', color1);
         }
     }
-
 
     shiftFocus(direction) {
         switch (direction) {
@@ -877,7 +866,6 @@ class SingleplayerGameScene extends Phaser.Scene {
         })
     }
 
-
     makeGrid(numRows, seed) {
         const gridArray = [];
 
@@ -918,11 +906,6 @@ class SingleplayerGameScene extends Phaser.Scene {
         nameIncrement += 1;
         return results;
     }
-
-
-
-
-
 
     addRow() {
         var row = this.makeRow((lineRow * 60));
