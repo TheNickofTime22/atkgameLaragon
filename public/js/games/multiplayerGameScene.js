@@ -18,7 +18,7 @@ var boxCursor2
 var main_container_blockLevel;
 
 var boxcursorRect;
-var block_containerRiseSpeed = 0.115;
+var block_acceleration = 0.115;
 var block_containerSpeed = 0.015;
 
 
@@ -105,7 +105,7 @@ class MultiplayerGameScene extends Phaser.Scene {
         this.currentMatch = this.ably.channels.get(data.channelName);
 
         console.log('currentMatch is made with channelname')
-        block_containerRiseSpeed = 0.000005;
+        block_acceleration = 0.000005;
         nameIncrement = 0;
         primaryBlockIndex = [0, 3];
         secondaryBlockIndex = [primaryBlockIndex[0], primaryBlockIndex[1] + 1];
@@ -550,29 +550,13 @@ class MultiplayerGameScene extends Phaser.Scene {
 
         //------------------------------------------------------------
 
-        /*
-          ______  __    __   _______   ______  __  ___
-         /      ||  |  |  | |   ____| /      ||  |/  /
-        |  ,----'|  |__|  | |  |__   |  ,----'|  '  /
-        |  |     |   __   | |   __|  |  |     |    <
-        |  `----.|  |  |  | |  |____ |  `----.|  .  \
-         \______||__|  |__| |_______| \______||__|\__\
 
-        .___  ___.      ___   .___________.  ______  __    __   _______     _______.
-        |   \/   |     /   \  |           | /      ||  |  |  | |   ____|   /       |
-        |  \  /  |    /  ^  \ `---|  |----`|  ,----'|  |__|  | |  |__     |   (----`
-        |  |\/|  |   /  /_\  \    |  |     |  |     |   __   | |   __|     \   \
-        |  |  |  |  /  _____  \   |  |     |  `----.|  |  |  | |  |____.----)   |
-        |__|  |__| /__/     \__\  |__|      \______||__|  |__| |_______|_______/
-
-
-        */
 
         // SPEED CONTROL
-        block_containerRiseSpeed += (block_containerSpeed * delta);
+        block_acceleration += (block_containerSpeed * delta);
 
-        main_container.y = (0 - block_containerRiseSpeed);
-        red_main_container.y = (0 - block_containerRiseSpeed);
+        main_container.y = (0 - block_acceleration);
+        red_main_container.y = (0 - block_acceleration);
 
 
         if (block_container.getBounds().y <= 68) {
@@ -592,7 +576,23 @@ class MultiplayerGameScene extends Phaser.Scene {
 
 
         // ----------------------------------------------------------------------------------------------------
+/*
+          ______  __    __   _______   ______  __  ___
+         /      ||  |  |  | |   ____| /      ||  |/  /
+        |  ,----'|  |__|  | |  |__   |  ,----'|  '  /
+        |  |     |   __   | |   __|  |  |     |    <
+        |  `----.|  |  |  | |  |____ |  `----.|  .  \
+         \______||__|  |__| |_______| \______||__|\__\
 
+        .___  ___.      ___   .___________.  ______  __    __   _______     _______.
+        |   \/   |     /   \  |           | /      ||  |  |  | |   ____|   /       |
+        |  \  /  |    /  ^  \ `---|  |----`|  ,----'|  |__|  | |  |__     |   (----`
+        |  |\/|  |   /  /_\  \    |  |     |  |     |   __   | |   __|     \   \
+        |  |  |  |  /  _____  \   |  |     |  `----.|  |  |  | |  |____.----)   |
+        |__|  |__| /__/     \__\  |__|      \______||__|  |__| |_______|_______/
+
+
+        */
         if ((time % 60) == 0) {
 
             this.eliminateRow();
@@ -619,14 +619,6 @@ class MultiplayerGameScene extends Phaser.Scene {
             this.updateRed();
         }
 
-        // Update Debug information
-
-        // debugText.setText([
-        // 	"checking setup:",
-        // 	"testing debug: " + cursorXYText,
-        // 	"lft-hovBlkIndex: " + primaryBlockIndex,
-        // 	"main_container.y: " + main_container.getBounds().height,
-        // ])
         debugText.setText([
             ""
         ])
