@@ -593,31 +593,30 @@ class MultiplayerGameScene extends Phaser.Scene {
 
 
         */
-        if ((time % 60) == 0) {
 
-            this.eliminateRow();
+        this.eliminateRow();
 
-            this.matchof4Vert(block_container);
-            this.matchof4Vert(red_block_container);
+        this.matchof4Vert(block_container);
+        this.matchof4Vert(red_block_container);
 
-            this.matchOf3Vert(block_container);
-            this.matchOf3Vert(red_block_container);
+        this.matchOf3Vert(block_container);
+        this.matchOf3Vert(red_block_container);
 
-            this.matchof4Hori(block_container);
-            this.matchof4Hori(red_block_container);
+        this.matchof4Hori(block_container);
+        this.matchof4Hori(red_block_container);
 
-            this.matchOf3Hori(block_container);
-            this.matchOf3Hori(red_block_container);
-            this.activateBlocks();
+        this.matchOf3Hori(block_container);
+        this.matchOf3Hori(red_block_container);
+        this.activateBlocks();
 
 
-            this.bubbleUpNull(red_visible_blocks);
-            this.bubbleUpNull(blue_visible_blocks);
-            score_display.setText(game_score_display);
+        this.bubbleUpNull(red_visible_blocks);
+        this.bubbleUpNull(blue_visible_blocks);
+        score_display.setText(game_score_display);
 
-            this.updateBlue();
-            this.updateRed();
-        }
+        this.updateBlue();
+        this.updateRed();
+
 
         debugText.setText([
             ""
