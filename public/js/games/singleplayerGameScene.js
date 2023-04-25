@@ -498,8 +498,8 @@ class SingleplayerGameScene extends Phaser.Scene {
                     block_container.getAt(this.indexForPosition(x, y + 120)),
                 ].filter(b => b);
             }
-            if (block.y <= 300) {
-                searchBoxHori = [
+            if (x <= 300) {
+                searchBoxHori = [// exclude right two columns
                     block_container.getAt(blockIndex),
                     block_container.getAt(this.indexForPosition(x + 60, y)),
                     block_container.getAt(this.indexForPosition(x + 120, y)),
