@@ -71,6 +71,7 @@ var red_lineRow;
 var boxCursor;
 var boxCursor2;
 var boxcursorRect;
+var boxcursorRect2;
 var block_acceleration = 0.115;
 var block_containerSpeed = 0.015;
 var rowIncrement = 0;
@@ -412,6 +413,7 @@ class MultiplayerGameScene extends Phaser.Scene {
 
 */
         boxcursorRect = boxCursor.getBounds();
+        boxcursorRect2 = boxCursor2.getBounds();
 
         primaryBlock = block_container.getAt(this.indexForPosition(primaryBlockIndex[1], primaryBlockIndex[0]));
 
@@ -465,16 +467,22 @@ class MultiplayerGameScene extends Phaser.Scene {
         if (boxcursorRect.y < 65) {
             boxCursor.y += 60;
             this.shiftFocus('down', boxCursor);
-            this.currentMatch.publish('player-keypress', { user: this.user, key: 'down' });
+            //this.currentMatch.publish('player-keypress', { user: this.user, key: 'down' });
         }
 
-/*------------------------------------------------------------------------------------------------------------------------------------------
+        if (boxcursorRect2.y < 65) {
+            boxCursor2.y += 60;
+            this.shiftFocus('down', boxCursor2);
+            //this.currentMatch.publish('player-keypress', { user: this.user, key: 'down' });
+        }
+
+        /*------------------------------------------------------------------------------------------------------------------------------------------
 
 
-                    <<Debug input. Debug Q will set hovered blocks' textures to null
+                            <<Debug input. Debug Q will set hovered blocks' textures to null
 
 
-*/
+        */
 
         if (Phaser.Input.Keyboard.JustDown(bugQ)) {
             if (primaryBlock == undefined || secondaryBlock == undefined) {
@@ -494,13 +502,12 @@ class MultiplayerGameScene extends Phaser.Scene {
         }
 
         if (Phaser.Input.Keyboard.JustDown(bugR)) {
-            console.log(red_RNG())
-            console.log(blue_RNG())
+            console.log(primaryBlock)
 
         }
 
         if (Phaser.Input.Keyboard.JustDown(bugE)) {
-            console.log(block_container.getAt(0).getData('x'), block_container.getAt(0).getData('y'), block_container.getAt(0).getData('color'));
+            console.log(block_container.getAt(0));
         }
 
 
@@ -525,17 +532,24 @@ class MultiplayerGameScene extends Phaser.Scene {
         if (red_block_container.getBounds().y <= 68) {
             this.scene.start('gameoverScene', { win: false, user: this.user });
         }
-/*------------------------------------------------------------------------------------------------------------------------------------------
+        /*------------------------------------------------------------------------------------------------------------------------------------------
 
 
-                    <<Methods for your grid management.
+                            <<Methods for your grid management.
 
 
-*/
-        this.eliminateRow();
+        */
+
         this.activateBlocks();
+        this.eliminateRow(block_container);
+        this.eliminateRow(red_block_container);
+
         this.updateGrid(blue_visible_blocks, block_container);
         this.updateGrid(red_visible_blocks, red_block_container);
+
+
+        this.bubbleUpNull(blue_visible_blocks, block_container);
+        this.bubbleUpNull(red_visible_blocks, red_block_container);
         //score_display.setText(game_score_display);
         //---------------------------------------------
 
@@ -576,14 +590,12 @@ class MultiplayerGameScene extends Phaser.Scene {
         }
         matchesSet.forEach(block => {
             block.setData('matched', true);
-            if (matchesSet.size > 0) {
-                console.log(matchesSet)
-            }
             block.spinToDisappear();
+            console.log(block.getData('color'));
             //game_score_display += 50;
         });
 
-        this.bubbleUpNull(visible_blocks, updated_container);
+
     }
 
     end() {
@@ -602,6 +614,7 @@ class MultiplayerGameScene extends Phaser.Scene {
             }
         }
     }
+
     activateBlocks() {
         red_block_container.each(sprite => {
             if (sprite.getBounds().y < 880) {
@@ -619,42 +632,49 @@ class MultiplayerGameScene extends Phaser.Scene {
         });
     }
 
-    eliminateRow() {
-        if (this.checkFirstRowEliminated(block_container)) {
+    eliminateRow(container) {
+        if (this.checkFirstRowEliminated(container)) {
 
-            block_container.removeBetween(0, 8, true);
-            this.addRow(block_container);
-            primaryBlockIndex[0] -= 60;
-            //main_container.y -= 60;
+            container.removeBetween(0, 8, true);
+            this.addRow(container);
+
+            container.iterate(function (block) {
+                block.y -= 60;
+            });
+
+
+            container.y += 60;
+            if (container == block_container) {
+                primaryBlockIndex[0] -= 60;
+                //this.currentMatch.publish('player-keypress', { user: this.user, key: 'down' });
+            } else {
+                primaryBlockIndex_2p[0] -= 60;
+                //this.shiftFocus('up', boxCursor2);
+            }
         }
-        if (this.checkFirstRowEliminated(red_block_container)) {
-
-            red_block_container.removeBetween(0, 8, true);
-            this.addRow(red_block_container);
-            primaryBlockIndex_2p[0] -= 60;
-            //red_main_container.y -= 60;
-        }
-
-
 
     }
 
     checkFirstRowEliminated(container) {
-        let counter = 0;
-        for (let index = 0; index < 8; index++) {
-
-            if ((container.getAt(index).getData('color') == 'null_block')) {
-                counter += 1;
-            }
-        }
-        if (counter == 8) {
-            console.log('8 nulls')
-            return true;
-        } else {
-            return false;
-        }
-
+        const firstEightBlocks = container.getAll().slice(0, 8);
+        const allNullBlocks = firstEightBlocks.every(block => block.getData('color') === 'null_block');
+        return allNullBlocks;
     }
+
+
+
+    addRow(container) {
+        if (container == red_block_container) {
+            var row = this.makeRow((red_lineRow * 60), red_RNG, false);
+            container.add(row);
+            //red_lineRow += 1;
+        } else {
+            var row = this.makeRow((lineRow * 60), blue_RNG, true);
+            container.add(row);
+            //lineRow += 1;
+        }
+    }
+
 
     swapColors(block1, block2) {
         const color1 = block1.texture.key;
@@ -682,7 +702,7 @@ class MultiplayerGameScene extends Phaser.Scene {
             switch (direction) {
 
                 case 'left':
-                    console.log('cursor1 moves left');
+
                     boxCursor.x -= 60;
                     primaryBlockIndex[1] -= 60;
                     break;
@@ -702,7 +722,6 @@ class MultiplayerGameScene extends Phaser.Scene {
         } else {
             switch (direction) {
                 case 'left':
-                    console.log('cursor2 moves left');
                     boxCursor2.x -= 60;
                     primaryBlockIndex_2p[1] -= 60;
                     break;
@@ -760,13 +779,8 @@ class MultiplayerGameScene extends Phaser.Scene {
                 baseBlock.setTint(0x808080);
                 results.push(baseBlock);
             }
-
             rowIncrement += 1;
             return results;
-
-
-
-
         } else {
             const results = [];
 
@@ -782,8 +796,7 @@ class MultiplayerGameScene extends Phaser.Scene {
 
             for (let index = 0; index < 8; index++) {
                 const baseBlock = new BaseBlock(this, index * 60, increment, blockPool[index]);
-                baseBlock.setData({ color: blockPool[index], x: rowIncrement, y: index, matched: false });
-                //baseBlock.setName('Block' + (rowIncrement) + "-" + index);
+                baseBlock.setData({ color: blockPool[index], matched: false });
                 baseBlock.setTint(0x808080);
                 results.push(baseBlock);
             }
@@ -810,21 +823,11 @@ class MultiplayerGameScene extends Phaser.Scene {
         return gridArray;
     }
 
-    addRow(container) {
-        if (container == red_block_container) {
-            var row = this.makeRow((red_lineRow * 60), red_RNG, false);
-            container.add(row);
-            red_lineRow += 1;
-        } else {
-            var row = this.makeRow((lineRow * 60), blue_RNG, true);
-            container.add(row);
-            lineRow += 1;
-        }
-    }
+
 
     indexForPosition(x, y) {
-        x = x/60;
-        y = y/60;
+        x = x / 60;
+        y = y / 60;
         //console.log('x'+x+'|y: '+ y)
         return (y * 8 + x);
     }

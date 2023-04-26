@@ -410,7 +410,7 @@ class SingleplayerGameScene extends Phaser.Scene {
         }
 
         if (Phaser.Input.Keyboard.JustDown(bugR)) {
-            //
+
         }
 
         if (Phaser.Input.Keyboard.JustDown(bugE)) {
@@ -521,10 +521,6 @@ class SingleplayerGameScene extends Phaser.Scene {
 
         matchesSet.forEach(block => {
             block.setData('matched', true);
-            if (matchesSet.size > 0) {
-                console.log(matchesSet)
-            }
-
             block.spinToDisappear();
             game_score_display += 50;
         });
@@ -672,20 +668,26 @@ class SingleplayerGameScene extends Phaser.Scene {
         }
     }
 
-    checkFirstRowEliminated() {
-        let counter = 0;
-        for (let index = 0; index < 8; index++) {
+    // checkFirstRowEliminated() {
+    //     let counter = 0;
+    //     for (let index = 0; index < 8; index++) {
 
-            if ((block_container.getAt(index).getData('color') == 'null_block')) {
-                counter += 1;
-            }
-        }
-        if (counter == 8) {
-            console.log('8 nulls')
-            return true;
-        } else {
-            return false;
-        }
+    //         if ((block_container.getAt(index).getData('color') == 'null_block')) {
+    //             counter += 1;
+    //         }
+    //     }
+    //     if (counter == 8) {
+    //         console.log('8 nulls')
+    //         return true;
+    //     } else {
+    //         return false;
+    //     }
+    // }
+
+    checkFirstRowEliminated() {
+        const firstEightBlocks = block_container.getAll().slice(0, 8);
+        const allNullBlocks = firstEightBlocks.every(block => block.getData('color') === 'null_block');
+        return allNullBlocks;
     }
 
 
