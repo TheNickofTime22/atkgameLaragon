@@ -99,7 +99,7 @@ export default class AuthTitleScene extends Phaser.Scene {
 
     endlessMode() {
         console.log('user: ' + this.user)
-        this.scene.start('singleplayerGameScene', { timer: !this.timer , user: this.user});
+        this.scene.start('singleplayerGameScene', { timer: this.timer , user: this.user});
     }
 
     multiplayer_mode() {

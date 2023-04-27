@@ -106,9 +106,9 @@ class SingleplayerGameScene extends Phaser.Scene {
 
         timer_hours = 0;
 
-        timer_min = this.timer ? 0 : 0;
+        timer_min = this.timer ? 1 : 0;
 
-        timer_seconds = this.timer ? 5 : 0;
+        timer_seconds = this.timer ? 0 : 0;
 
         game_score_display = 0;
 
@@ -320,8 +320,8 @@ class SingleplayerGameScene extends Phaser.Scene {
             time_display.setText(timer_hours + ":0" + timer_min + ":" + timer_seconds.toFixed(1));
         }
 
-        if (Math.floor(timer_seconds) % 5 === 0 && !isRunning) {
-            block_containerSpeed += 0.0005;
+        if (Math.floor(timer_seconds) % 10 === 0 && !isRunning) {
+            block_containerSpeed += 0.001;
             console.log("5 seconds!")
             game_speed += 500;
             speed_display.setText(`[ ${game_speed / 1000} ]`);
