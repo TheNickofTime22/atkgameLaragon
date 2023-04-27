@@ -14,6 +14,7 @@ class GameoverScene extends Phaser.Scene {
         this.game_mode_display = data.game_mode_display;
         this.user = data.user;
         this.isWinner = data.win;
+        this.enemy = data.enemy;
         this.ably = data.ably;
         if (this.user.id == 91025195823105058 ){
             this.isUserLoggedIn = false;
@@ -35,7 +36,7 @@ class GameoverScene extends Phaser.Scene {
         // call renderGameoverScreen method with appropriate parameter
         this.renderGameoverScreen(this.isUserLoggedIn);
 
-        var play_again = this.add.text(110, 650, 'Main Menu', { font: '100px Bernard', fill: '#FFFFFF' }).setInteractive();
+        var play_again = this.add.text(110, 750, 'Main Menu', { font: '100px Bernard', fill: '#FFFFFF' }).setInteractive();
         play_again.on('pointerover', () => {
             play_again.setScale(1.2);
         });
@@ -48,7 +49,7 @@ class GameoverScene extends Phaser.Scene {
     }
 
     renderGameoverScreen(isUserLoggedIn) {
-        this.add.text(this.width, 150, 'Game Over', { font: '132px Bernard', fill: '#FFFFFF' });
+        this.add.text(110, 150, 'Game Over', { font: '132px Bernard', fill: '#FFFFFF' });
         if (isUserLoggedIn) {
             const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             const xhr = new XMLHttpRequest();
@@ -80,9 +81,9 @@ class GameoverScene extends Phaser.Scene {
             if (this.isWinner == undefined){
                 var winnerText = this.add.text(1000, 450, "Guest Score: " + this.game_score_display, { font: '132px Bernard', fill: '#FFFFFF' }).setOrigin(0.5);
             } else if (this.isWinner){
-                var winnerText = this.add.text(1000, 450, " You Won! ", { font: '132px Bernard', fill: '#FFFFFF' }).setOrigin(0.5);
+                var winnerText = this.add.text(1000, 450, this.user.screenname + " Wins!", { font: '132px Bernard', fill: '#FFFFFF' }).setOrigin(0.5);
             } else if (!this.isWinner) {
-                var winnerText = this.add.text(1000, 450, " You Lose! ", { font: '132px Bernard', fill: '#FFFFFF' }).setOrigin(0.5);
+                var winnerText = this.add.text(1000, 450, this.enemy.screenname + " Wins!", { font: '132px Bernard', fill: '#FFFFFF' }).setOrigin(0.5);
             }
 
             // this.add.text(700, 150, this.game_mode_display, { font: '132px Bernard', fill: '#FFFFFF' });
@@ -135,15 +136,7 @@ class GameoverScene extends Phaser.Scene {
 
     clickButton() {
 
-        if(this.isUserLoggedIn){
-
-            this.scene.start('authTitleScene');
-
-        } else {
-            this.scene.start('guestTitleScene');
-        }
-
-
+        location.reload();
 
     }
 }

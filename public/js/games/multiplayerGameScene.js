@@ -486,11 +486,11 @@ if (Phaser.Input.Keyboard.JustDown(bugE)) {
 
 if (block_container.getBounds().y <= 68) {
 
-    this.scene.start('gameoverScene', { win: false, user: this.user, ably: this.ably });
+    this.scene.start('gameoverScene', { win: false, enemy:this.enemy, user: this.user, ably: this.ably });
 }
 
 if (red_block_container.getBounds().y <= 68) {
-    this.scene.start('gameoverScene', { win: true, user: this.user, ably:this.ably});
+    this.scene.start('gameoverScene', { win: true, enemy:this.enemy, user: this.user, ably:this.ably});
 }
 /*------------------------------------------------------------------------------------------------------------------------------------------
 
