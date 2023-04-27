@@ -148,21 +148,6 @@ class MultiplayerGameScene extends Phaser.Scene {
         // Match checking
         checkLength = 5;
 
-        // Game mode
-        // timer_hours = 0;
-        // timer_min = 0;
-        // timer_seconds = 0;
-        //game_score_display = 0;
-        //score_display; // Current score from matches
-
-        // if (timer) {
-        //     game_mode_display = "Time Trial"; // Current gamemode
-        // } else {
-        //     game_mode_display = "Endless"; // Current gamemode
-        // }
-
-        //game_speed_display = "<< " + game_speed.toFixed(2) + " >>"; // Current game speed
-
         // Containers
         block_container;
         main_container;
@@ -207,7 +192,10 @@ class MultiplayerGameScene extends Phaser.Scene {
 
         this.load.image('cursor2', '/img/cursor2.png');
 
-        this.load.atlas('atlas', '/img/block_atlas/base_blocks.png', '/img/block_atlas/base_blocks.json');
+        this.load.image('yourImage', '/img/profile/' + this.user.pfp);
+        this.load.image('theirImage', '/img/profile/' + this.enemy.pfp)
+
+
     }
 
 
@@ -291,6 +279,9 @@ class MultiplayerGameScene extends Phaser.Scene {
         */
         this.add.text(200, 35, this.user.screenname, { font: '44px Bernard', fill: '#000000' });
         this.add.text(1530, 35, this.enemy.screenname, { font: '44px Bernard', fill: '#000000' });
+
+        this.add.image(690, 110, 'yourImage').setScale(1.5);
+        this.add.image(1230, 110, 'theirImage').setScale(1.5);
 
         /*------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -435,13 +426,13 @@ if (Phaser.Input.Keyboard.JustDown(speedUpBtn)) {
 }
 
 if (boxcursorRect.y < 65) {
-    boxCursor.y += 60;
+    // boxCursor.y += 60;
     this.shiftFocus('down', boxCursor);
     //this.currentMatch.publish('player-keypress', { user: this.user, key: 'down' });
 }
 
 if (boxcursorRect2.y < 65) {
-    boxCursor2.y += 60;
+    // boxCursor2.y += 60;
     this.shiftFocus('down', boxCursor2);
     //this.currentMatch.publish('player-keypress', { user: this.user, key: 'down' });
 }
@@ -495,11 +486,11 @@ if (Phaser.Input.Keyboard.JustDown(bugE)) {
 
 if (block_container.getBounds().y <= 68) {
 
-    this.scene.start('gameoverScene', { win: false, user: this.user });
+    this.scene.start('gameoverScene', { win: false, user: this.user, ably: this.ably });
 }
 
 if (red_block_container.getBounds().y <= 68) {
-    this.scene.start('gameoverScene', { win: true, user: this.user });
+    this.scene.start('gameoverScene', { win: true, user: this.user, ably:this.ably});
 }
 /*------------------------------------------------------------------------------------------------------------------------------------------
 

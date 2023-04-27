@@ -14,6 +14,7 @@ class GameoverScene extends Phaser.Scene {
         this.game_mode_display = data.game_mode_display;
         this.user = data.user;
         this.isWinner = data.win;
+        this.ably = data.ably;
         if (this.user.id == 91025195823105058 ){
             this.isUserLoggedIn = false;
         } else {
@@ -135,7 +136,9 @@ class GameoverScene extends Phaser.Scene {
     clickButton() {
 
         if(this.isUserLoggedIn){
+
             this.scene.start('authTitleScene');
+
         } else {
             this.scene.start('guestTitleScene');
         }
