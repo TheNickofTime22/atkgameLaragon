@@ -3,23 +3,22 @@
         home
     </x-slot:title>
 
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Dashboard') }}</div>
+    <body class="antialiased" background="{{ asset('img/green-page-background.jpg') }}">
 
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-                        <p>{{Auth::user()->name}}</p>
-                    {{ __('You are logged in!') }}
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-9">
+                    <div class="text-center" id="gameDiv" >
+                        @if(Auth::user() != true)
+                        <script type="module" src="{{ asset('js/launch/launchGuestGame.js')}}"></script>
+                            @else
+
+                            <script type="module" src="{{ asset('js/launch/launchAuthGame.js') }}"></script>
+                        @endif
+                    </div>
+
                 </div>
             </div>
         </div>
-    </div>
-</div>
+    </body>
 </x-layout>

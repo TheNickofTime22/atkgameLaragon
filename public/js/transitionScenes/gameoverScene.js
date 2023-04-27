@@ -34,7 +34,15 @@ class GameoverScene extends Phaser.Scene {
         // call renderGameoverScreen method with appropriate parameter
         this.renderGameoverScreen(this.isUserLoggedIn);
 
-        var play_again = this.add.text(110, 650, 'to play again\n  Click Here', { font: '100px Bernard', fill: '#FFFFFF' }).setInteractive();
+        var play_again = this.add.text(110, 650, 'Main Menu', { font: '100px Bernard', fill: '#FFFFFF' }).setInteractive();
+        play_again.on('pointerover', () => {
+            play_again.setScale(1.2);
+        });
+
+
+        play_again.on('pointerout', () => {
+            play_again.setScale(1);
+        });
         play_again.on('pointerdown', () => this.clickButton());
     }
 
@@ -67,17 +75,17 @@ class GameoverScene extends Phaser.Scene {
 
 
             // if user is logged in, display different text and options
-            console.log(this.isWinner);
+            //console.log(this.isWinner);
             if (this.isWinner == undefined){
                 var winnerText = this.add.text(1000, 450, "Guest Score: " + this.game_score_display, { font: '132px Bernard', fill: '#FFFFFF' }).setOrigin(0.5);
-            } else if (!this.isWinner){
+            } else if (this.isWinner){
                 var winnerText = this.add.text(1000, 450, " You Won! ", { font: '132px Bernard', fill: '#FFFFFF' }).setOrigin(0.5);
-            } else if (this.isWinner) {
+            } else if (!this.isWinner) {
                 var winnerText = this.add.text(1000, 450, " You Lose! ", { font: '132px Bernard', fill: '#FFFFFF' }).setOrigin(0.5);
             }
 
             // this.add.text(700, 150, this.game_mode_display, { font: '132px Bernard', fill: '#FFFFFF' });
-            console.log(this.game_mode_display);
+            //console.log(this.game_mode_display);
             this.tweens.add({
                 targets: winnerText,
                 y: winnerText.y + 50,
@@ -95,7 +103,7 @@ class GameoverScene extends Phaser.Scene {
                 repeat: -1
             });
 
-            this.add.text(1400, 860, "Click here to view leaderboard", { font: '60px Bernard', fill: '#FFFFFF' }).setOrigin(0.5).setInteractive();
+            //this.add.text(1400, 860, "Click here to view leaderboard", { font: '60px Bernard', fill: '#FFFFFF' }).setOrigin(0.5).setInteractive();
 
 
 
@@ -125,7 +133,15 @@ class GameoverScene extends Phaser.Scene {
     }
 
     clickButton() {
-        this.scene.start('gameScene');
+
+        if(this.isUserLoggedIn){
+            this.scene.start('authTitleScene');
+        } else {
+            this.scene.start('guestTitleScene');
+        }
+
+
+
     }
 }
 

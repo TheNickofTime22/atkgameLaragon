@@ -80,7 +80,7 @@ class SingleplayerGameScene extends Phaser.Scene {
         this.timer = data.timer;
 
         // Set initial values for game elements
-        block_containerRiseSpeed = 0.005;
+        block_containerRiseSpeed = 0.015;
 
         nameIncrement = 0;
 
@@ -106,9 +106,9 @@ class SingleplayerGameScene extends Phaser.Scene {
 
         timer_hours = 0;
 
-        timer_min = this.timer ? 1 : 0;
+        timer_min = this.timer ? 0 : 0;
 
-        timer_seconds = this.timer ? 0 : 0;
+        timer_seconds = this.timer ? 5 : 0;
 
         game_score_display = 0;
 
@@ -235,13 +235,13 @@ class SingleplayerGameScene extends Phaser.Scene {
             time_display = this.add.text(-40, -250, `:: ${game_time_display} ::`, textConfig),
             this.add.text(-230, -230, '_____________________________', textConfig),
             this.add.text(-30, -150, 'Score', textConfig),
-            score_display = this.add.text(-55, -100, `||     ${game_score_display}     ||`, textConfig),
+            score_display = this.add.text(-25, -100, `||     ${game_score_display}     ||`, textConfig),
             this.add.text(-230, -70, '_____________________________', textConfig),
             this.add.text(-30, 0, 'Mode', textConfig),
             this.add.text(-70, 50, `:: ${game_mode_display} ::`, textConfig),
             this.add.text(-230, 80, '_____________________________', textConfig),
             this.add.text(-30, 150, 'Speed', textConfig),
-            speed_display = this.add.text(-45, 200, `[ ${game_speed_display} ]`, textConfig),
+            speed_display = this.add.text(-35, 200, `[ ${game_speed_display} ]`, textConfig),
         ]);
 
         /*-------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -379,9 +379,9 @@ class SingleplayerGameScene extends Phaser.Scene {
             this.swapColors(primaryBlock, secondaryBlock);
         }
 
-        if (Phaser.Input.Keyboard.JustDown(speedUpBtn)) {
-            block_containerSpeed += 0.05;
-        }
+        // if (Phaser.Input.Keyboard.JustDown(speedUpBtn)) {
+        //     block_containerSpeed += 0.05;
+        // }
 
         if (boxcursorRect.y < 65) {
             boxCursor.y += 60;
@@ -397,16 +397,16 @@ class SingleplayerGameScene extends Phaser.Scene {
         */
 
         if (Phaser.Input.Keyboard.JustDown(bugQ)) {
-            if (primaryBlock == null || secondaryBlock == null) {
+            // if (primaryBlock == null || secondaryBlock == null) {
 
-            } else {
-                primaryBlock.setTexture('null_block');
-                primaryBlock.setData('color', 'null_block');
+            // } else {
+            //     primaryBlock.setTexture('null_block');
+            //     primaryBlock.setData('color', 'null_block');
 
-                secondaryBlock.setTexture('null_block');
-                secondaryBlock.setData('color', 'null_block');
+            //     secondaryBlock.setTexture('null_block');
+            //     secondaryBlock.setData('color', 'null_block');
 
-            }
+            // }
         }
 
         if (Phaser.Input.Keyboard.JustDown(bugR)) {

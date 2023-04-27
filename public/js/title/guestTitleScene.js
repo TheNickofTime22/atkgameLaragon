@@ -26,7 +26,7 @@ class GuestTitleScene extends Phaser.Scene {
         const timeDesc = this.add.text(
             700,
             470,
-            'Get the highest score\n possible within 2 minutes',
+            'Get the highest score\n possible within 1 minute',
             { font: '32px Bernard', fill: '#FFFFFF' }
         ).setAlpha(0);
 

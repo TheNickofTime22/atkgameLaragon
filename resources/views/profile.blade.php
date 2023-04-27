@@ -1,4 +1,4 @@
-<<x-layout>
+<x-layout>
     <x-slot:title>
         profile
     </x-slot:title>
@@ -56,27 +56,27 @@
         </div>
 
         <div class="row mt-4">
-            <div class="col-3 offset-4">
+            <div class="col-6 offset-3">
                 <h1 class="">{{Auth::user()->screenname}}</h1>
             </div>
-            <div class="col-2">
-                {{-- Click this button to be directed to a page to change all information.   --}}
+            {{-- <div class="col-2">
+
                 <button class="btn btn-primary">
                     edit
                 </button>
                 <button class="btn btn-primary">
                     settings
                 </button>
-            </div>
+            </div> --}}
 
 
         </div>
         <div class="row m-4">
-            <div class="col-4 offset-1 text-center " style="background-color: gray">
+            <div class="col-6 offset-3 text-center " style="background-color: gray">
                 <div class="container ">
                     <div class="row">
 
-                        <h3 class=""><u>Scores</u></h3>
+                        <h1 class="display-3">Scores</h1>
                     </div>
                     <div class="row mt-4">
                         <table class="table table-hover table-nowrap">
@@ -88,7 +88,7 @@
                             <tbody>
 
                                 @if($scores != null)
-                                @foreach ($scores as $score)
+                                @foreach ($scores as $key => $score)
                                 <tr>
                                     <td>
                                         <h4 class="text-heading font-semibold" href="#">
@@ -103,11 +103,9 @@
                                     </td>
                                     <td>
                                         <h4 class="text-heading font-semibold" href="#">
-                                            {{$score->daysSince}}
+                                                {{ $elapsedTimes[$key] }}
                                         </h4>
-
                                     </td>
-
                                 </tr>
                                 @endforeach
                                 @endif
@@ -115,49 +113,6 @@
                         </table>
                     </div>
                 </div>
-
-            </div>
-            <div class="col-4 offset-1 text-center " style="background-color: gray">
-                <div class="container ">
-                    <div class="row">
-                        <h3 class=""><u>Friends</u></h3>
-
-                    </div>
-                    <div class="row mt-4">
-                        <table class="table table-hover table-nowrap">
-
-                            <tbody>
-                                {{-- @if($friends != null)
-                                @foreach($friends as $friend) --}}
-                                <tr>
-                                    <td>
-                                        <img alt="..." src="{{ asset('img/profile/'.$friend->pfp) }}"
-                                            class="rounded-circle"
-                                            style=" width: 50px;height: 50px;border-radius: 50%;box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px, rgb(51, 51, 51) 0px 0px 0px 3px;">
-
-                                    </td>
-                                    <td>
-                                        <h4 class="text-heading font-semibold" href="#">
-                                            {{-- {{$friend->screenname}} --}}
-                                        </h4>
-                                    </td>
-
-                                    <td>
-                                        <button class="btn btn-warning">view</button>
-                                        <button class="btn btn-warning mx-1">fight</button>
-                                        <button class="btn btn-warning mx-1">del</button>
-                                    </td>
-
-                                </tr>
-                                {{-- @endforeach
-                                @endif --}}
-
-
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
             </div>
         </div>
     </div>

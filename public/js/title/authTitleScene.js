@@ -35,7 +35,7 @@ export default class AuthTitleScene extends Phaser.Scene {
         const endless_mode = this.add.sprite(400, 400, 'endless').setInteractive();
         const time_trial_mode = this.add.sprite(450, 500, 'time_trial').setInteractive();
         const multiplayer_mode = this.add.sprite(670, 700, 'multiplayer').setInteractive();
-        const time_desc = this.add.text(700, 470, 'Get the highest score\n possible within 2 minutes', { font: '32px Bernard', fill: '#FFFFFF' }).setAlpha(0);
+        const time_desc = this.add.text(700, 470, 'Get the highest score\n possible within 1 minute', { font: '32px Bernard', fill: '#FFFFFF' }).setAlpha(0);
         const endless_desc = this.add.text(650, 350, 'Get the highest score\n possible with no time limit,\n as the game gets steadily faster.', { font: '32px Bernard', fill: '#FFFFFF' }).setAlpha(0);
 
 

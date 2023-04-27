@@ -11,6 +11,7 @@ export default class LobbyScene extends Phaser.Scene {
             // screenname: user.screenname
         });
         this.controllerChannel = this.ably.channels.get('configChannel');
+        this.enemy;
     }
 
 
@@ -25,7 +26,7 @@ export default class LobbyScene extends Phaser.Scene {
             console.log("YOU DID IT "+ message.data.user.screenname +", STARTING THE GAME!!!");
             this.add.bitmapText(300, 450, 'smooth', 'Connecting to game...');
 
-            this.scene.start('multiplayerGameScene', {user: this.user, channelName: message.data.channelName, rngSeed: message.data.rngSeed, ably:this.ably})
+            this.scene.start('multiplayerGameScene', {user: this.user, enemy: this.enemy, channelName: message.data.channelName, rngSeed: message.data.rngSeed, ably:this.ably})
         });
     }
 
@@ -71,6 +72,8 @@ export default class LobbyScene extends Phaser.Scene {
         // listen for the host being created
         // ------1b------
         this.controllerChannel.subscribe('I-wanna-join-a-host', (message) =>{
+            // joiner = enemy
+            this.enemy = message.data.user;
             console.log('I am user: ' + message.data.user.screenname +". I wanna join you.");
 
             // agree to let them join, tell them who you are, the channel name, and the rng you'll use
@@ -96,9 +99,12 @@ export default class LobbyScene extends Phaser.Scene {
         let randomSeed;
         let channelName;
 
+
         // ------2b------
         this.controllerChannel.subscribe('okay-here-is-the-info', (message) => {
             console.log('Gotcha ' + message.data.user.screenname);
+            // enemy = host
+            this.enemy = message.data.user;
             randomSeed = message.data.rngSeed;
             channelName = message.data.channelName;
 

@@ -7,26 +7,50 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
+use DateTime;
 
 class ProfileController extends Controller
 
 {
     public function index(){
+        $elapsedTimes = [];
+
 
         $user = Auth::user();
         if($user->scores != null ){
             $scores = $user->scores;
+            foreach ($scores as $score) {
+                $createdAt = new DateTime($score->created_at); // Create a DateTime instance from the timestamp
+                $now = new DateTime(); // Create a DateTime instance representing the current time
+                $diff = $now->diff($createdAt); // Get the difference between the two dates as a DateInterval object
+
+                // Format the output based on the difference between the two dates
+                if ($diff->y > 0) {
+                    $elapsed = $diff->y . ' year' . ($diff->y > 1 ? 's' : '') . ' ago';
+                } elseif ($diff->m > 0) {
+                    $elapsed = $diff->m . ' month' . ($diff->m > 1 ? 's' : '') . ' ago';
+                } elseif ($diff->d > 0) {
+                    $elapsed = $diff->d . ' day' . ($diff->d > 1 ? 's' : '') . ' ago';
+                } elseif ($diff->h > 0) {
+                    $elapsed = $diff->h . ' hour' . ($diff->h > 1 ? 's' : '') . ' ago';
+                } elseif ($diff->i > 0) {
+                    $elapsed = $diff->i . ' minute' . ($diff->i > 1 ? 's' : '') . ' ago';
+                } else {
+                    $elapsed = 'just now';
+                }
+
+                $elapsedTimes[] = $elapsed;
+                }
         } else {
             $scores = null;
         }
 
-        if($user->friends != null){
-            $friends = $user->friends;
-        } else {
-            $friends = null;
-        }
 
-        return view('profile', ['scores' => $scores, 'friends' => $friends]);
+
+
+
+
+        return view('profile', ['scores' => $scores, 'elapsedTimes' => $elapsedTimes]);
     }
 
     public function store(Request $request) {
