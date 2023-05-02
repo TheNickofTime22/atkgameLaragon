@@ -79,7 +79,7 @@ class GameoverScene extends Phaser.Scene {
             // if user is logged in, display different text and options
             //console.log(this.isWinner);
             if (this.isWinner == undefined){
-                var winnerText = this.add.text(1000, 450, "Guest Score: " + this.game_score_display, { font: '132px Bernard', fill: '#FFFFFF' }).setOrigin(0.5);
+                var winnerText = this.add.text(1000, 450, "Score: " + this.game_score_display, { font: '132px Bernard', fill: '#FFFFFF' }).setOrigin(0.5);
             } else if (this.isWinner){
                 var winnerText = this.add.text(1000, 450, this.user.screenname + " Wins!", { font: '132px Bernard', fill: '#FFFFFF' }).setOrigin(0.5);
             } else if (!this.isWinner) {
