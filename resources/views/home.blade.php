@@ -1,6 +1,6 @@
 <x-layout>
     <x-slot:title>
-        home
+        Home
     </x-slot:title>
 
     <body class="antialiased" background="{{ asset('img/green-page-background.jpg') }}">

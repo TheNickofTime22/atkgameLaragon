@@ -80,7 +80,7 @@ class SingleplayerGameScene extends Phaser.Scene {
         this.timer = data.timer;
 
         // Set initial values for game elements
-        block_containerRiseSpeed = 0.015;
+        block_containerRiseSpeed = 0.02;
 
         nameIncrement = 0;
 
